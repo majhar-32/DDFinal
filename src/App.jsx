@@ -146,80 +146,10 @@ const Footer = () => {
   );
 };
 
-// List of districts for selection in forms
-const districts = [
-  "Bagerhat",
-  "Bandarban",
-  "Barguna",
-  "Barishal",
-  "Bhola",
-  "Bogra",
-  "Brahmanbaria",
-  "Chandpur",
-  "Chapai Nawabganj",
-  "Chattogram",
-  "Chuadanga",
-  "Cox's Bazar",
-  "Cumilla",
-  "Dhaka",
-  "Dinajpur",
-  "Faridpur",
-  "Feni",
-  "Gaibandha",
-  "Gazipur",
-  "Gopalganj",
-  "Habiganj",
-  "Jamalpur",
-  "Jashore",
-  "Jhalokati",
-  "Jhenaidah",
-  "Joypurhat",
-  "Khagrachari",
-  "Khulna",
-  "Kishoreganj",
-  "Kurigram",
-  "Kushtia",
-  "Lakshmipur",
-  "Lalmonirhat",
-  "Madaripur",
-  "Magura",
-  "Manikganj",
-  "Meherpur",
-  "Moulvibazar",
-  "Munshiganj",
-  "Mymensingh",
-  "Naogaon",
-  "Narail",
-  "Narayanganj",
-  "Narsingdi",
-  "Natore",
-  "Netrokona",
-  "Nilphamari",
-  "Noakhali",
-  "Pabna",
-  "Panchagarh",
-  "Patuakhali",
-  "Pirojpur",
-  "Rajbari",
-  "Rajshahi",
-  "Rangamati",
-  "Rangpur",
-  "Satkhira",
-  "Shariatpur",
-  "Sherpur",
-  "Sirajganj",
-  "Sunamganj",
-  "Sylhet",
-  "Tangail",
-  "Thakurgaon",
-];
-
 // TeacherRegistrationForm Component - Handles teacher registration
 const TeacherRegistrationForm = ({ setCurrentPage }) => {
   const [formData, setFormData] = useState({
     institute: "",
-    gender: "",
-    district: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -236,8 +166,6 @@ const TeacherRegistrationForm = ({ setCurrentPage }) => {
     const newErrors = {};
     if (!formData.institute.trim())
       newErrors.institute = "Institute is required";
-    if (!formData.gender) newErrors.gender = "Gender is required";
-    if (!formData.district) newErrors.district = "District is required";
     if (!formData.email.trim()) newErrors.email = "Email is required";
     else if (!/\S+@\S+\.\S+/.test(formData.email))
       newErrors.email = "Email is invalid";
@@ -272,8 +200,6 @@ const TeacherRegistrationForm = ({ setCurrentPage }) => {
 
       const newTeacher = {
         institute: formData.institute,
-        gender: formData.gender,
-        district: formData.district,
         email: formData.email,
         password: formData.password, // In a real app, hash this password!
       };
@@ -311,6 +237,23 @@ const TeacherRegistrationForm = ({ setCurrentPage }) => {
           <div>
             <input
               type="text"
+              name="name"
+              placeholder="Enter Your Name"
+              value={formData.name}
+              onChange={handleChange}
+              className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ${
+                errors.name ? "border-red-500" : "border-gray-300"
+              }`}
+            />
+            {errors.name && (
+              <p className="text-red-500 text-xs italic mt-1 text-left">
+                {errors.name}
+              </p>
+            )}
+          </div>
+          <div>
+            <input
+              type="text"
               name="institute"
               placeholder="Enter Your Institute"
               value={formData.institute}
@@ -325,47 +268,7 @@ const TeacherRegistrationForm = ({ setCurrentPage }) => {
               </p>
             )}
           </div>
-          <div>
-            <select
-              name="gender"
-              value={formData.gender}
-              onChange={handleChange}
-              className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ${
-                errors.gender ? "border-red-500" : "border-gray-300"
-              }`}
-            >
-              <option value="">Select Gender</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-            </select>
-            {errors.gender && (
-              <p className="text-red-500 text-xs italic mt-1 text-left">
-                {errors.gender}
-              </p>
-            )}
-          </div>
-          <div>
-            <select
-              name="district"
-              value={formData.district}
-              onChange={handleChange}
-              className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ${
-                errors.district ? "border-red-500" : "border-gray-300"
-              }`}
-            >
-              <option value="">Select District</option>
-              {districts.map((district, index) => (
-                <option key={index} value={district}>
-                  {district}
-                </option>
-              ))}
-            </select>
-            {errors.district && (
-              <p className="text-red-500 text-xs italic mt-1 text-left">
-                {errors.district}
-              </p>
-            )}
-          </div>
+
           <div>
             <input
               type="email"
@@ -433,8 +336,6 @@ const TeacherRegistrationForm = ({ setCurrentPage }) => {
 const StudentRegistrationForm = ({ setCurrentPage }) => {
   const [formData, setFormData] = useState({
     gradeLevel: "",
-    gender: "",
-    district: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -451,8 +352,6 @@ const StudentRegistrationForm = ({ setCurrentPage }) => {
     const newErrors = {};
     if (!formData.gradeLevel)
       newErrors.gradeLevel = "Grade or Level is required";
-    if (!formData.gender) newErrors.gender = "Gender is required";
-    if (!formData.district) newErrors.district = "District is required";
     if (!formData.email.trim()) newErrors.email = "Email is required";
     else if (!/\S+@\S+\.\S+/.test(formData.email))
       newErrors.email = "Email is invalid";
@@ -487,8 +386,6 @@ const StudentRegistrationForm = ({ setCurrentPage }) => {
 
       const newStudent = {
         gradeLevel: formData.gradeLevel,
-        gender: formData.gender,
-        district: formData.district,
         email: formData.email,
         password: formData.password, // In a real app, hash this password!
       };
@@ -509,7 +406,7 @@ const StudentRegistrationForm = ({ setCurrentPage }) => {
     <div className="min-h-screen bg-blue-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full text-center border border-blue-200">
         <h2 className="text-4xl font-bold text-gray-800 mb-8">
-          REGISTRATION FORM
+          STUDENT REGISTRATION
         </h2>
         {isSubmitted && (
           <div
@@ -524,6 +421,23 @@ const StudentRegistrationForm = ({ setCurrentPage }) => {
         )}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
+            <input
+              type="text"
+              name="name"
+              placeholder="Enter Your Name"
+              value={formData.name}
+              onChange={handleChange}
+              className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ${
+                errors.name ? "border-red-500" : "border-gray-300"
+              }`}
+            />
+            {errors.name && (
+              <p className="text-red-500 text-xs italic mt-1 text-left">
+                {errors.name}
+              </p>
+            )}
+          </div>
+          <div>
             <select
               name="gradeLevel"
               value={formData.gradeLevel}
@@ -532,7 +446,7 @@ const StudentRegistrationForm = ({ setCurrentPage }) => {
                 errors.gradeLevel ? "border-red-500" : "border-gray-300"
               }`}
             >
-              <option value="">Select Grade or Level</option>
+              <option value="">Select Level of Study</option>
               <option value="SSC">SSC</option>
               <option value="HSC">HSC</option>
               <option value="Admission">Admission</option>
@@ -543,47 +457,7 @@ const StudentRegistrationForm = ({ setCurrentPage }) => {
               </p>
             )}
           </div>
-          <div>
-            <select
-              name="gender"
-              value={formData.gender}
-              onChange={handleChange}
-              className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ${
-                errors.gender ? "border-red-500" : "border-gray-300"
-              }`}
-            >
-              <option value="">Select Gender</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-            </select>
-            {errors.gender && (
-              <p className="text-red-500 text-xs italic mt-1 text-left">
-                {errors.gender}
-              </p>
-            )}
-          </div>
-          <div>
-            <select
-              name="district"
-              value={formData.district}
-              onChange={handleChange}
-              className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ${
-                errors.district ? "border-red-500" : "border-gray-300"
-              }`}
-            >
-              <option value="">Select District</option>
-              {districts.map((district, index) => (
-                <option key={index} value={district}>
-                  {district}
-                </option>
-              ))}
-            </select>
-            {errors.district && (
-              <p className="text-red-500 text-xs italic mt-1 text-left">
-                {errors.district}
-              </p>
-            )}
-          </div>
+
           <div>
             <input
               type="email"
@@ -1999,7 +1873,6 @@ const courseSubjectsData = {
   ],
 };
 
-// CourseSubjectsPage Component - Displays subjects for a specific course
 const CourseSubjectsPage = ({ courseName, setCurrentPage }) => {
   const subjects = courseSubjectsData[courseName] || [];
 
@@ -3260,35 +3133,41 @@ const App = () => {
         return (
           <main className="p-8 text-center flex-grow">
             {/* Conditionally render the hero section based on isCoursesOnlyView */}
-            {!isCoursesOnlyView && (
-              <div className="flex flex-col md:flex-row mt-12 bg-white rounded-lg shadow-md max-w-6xl mx-auto overflow-hidden">
-                <div className="md:w-1/2 p-6 flex flex-col justify-center">
-                  <h1 className="text-lg text-gray-700 font-bold mb-2">
-                    DoubtDesk – Your Personalized Doubt-Solving Partner
-                  </h1>
-                  <p className="text-gray-600 leading-relaxed mb-2">
-                    Struggling with a question? DoubtDesk helps students get
-                    clear, subject-wise answers from expert teachers. Just post
-                    your doubt, and let our assigned teachers guide you – fast
-                    and focused.
-                  </p>
-                  <p className="text-gray-600 leading-relaxed">
-                    Explore our courses, connect with teachers, and never let a
-                    doubt hold you back from achieving your academic goals.
-                  </p>
-                </div>
 
-                <div className="md:w-1/2 h-full">
-                  <img
-                    src="stress.png"
-                    alt="Student thinking"
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src =
-                        "https://placehold.co/600x400/cccccc/000000?text=Image";
-                    }}
-                  />
+            {!isCoursesOnlyView && (
+              <div>
+                <h1 className="text-4xl font-bold text-gray-800 mb-4">
+                  From Confusion to Clarity — DoubtDesk
+                </h1>
+                <div className="flex flex-col md:flex-row mt-12 bg-white rounded-lg shadow-md max-w-6xl mx-auto overflow-hidden">
+                  <div className="md:w-1/2 p-6 flex flex-col justify-center">
+                    <h1 className="text-lg text-gray-700 font-bold mb-2">
+                      DoubtDesk – Your Personalized Doubt-Solving Partner
+                    </h1>
+                    <p className="text-gray-600 leading-relaxed mb-2">
+                      Struggling with a question? DoubtDesk helps students get
+                      clear, subject-wise answers from expert teachers. Just
+                      post your doubt, and let our assigned teachers guide you –
+                      fast and focused.
+                    </p>
+                    <p className="text-gray-600 leading-relaxed">
+                      Explore our courses, connect with teachers, and never let
+                      a doubt hold you back from achieving your academic goals.
+                    </p>
+                  </div>
+
+                  <div className="md:w-1/2 h-full">
+                    <img
+                      src="stress.png"
+                      alt="Student thinking"
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src =
+                          "https://placehold.co/600x400/cccccc/000000?text=Image";
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
             )}
