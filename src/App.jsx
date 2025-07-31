@@ -766,6 +766,332 @@ const TeacherLoginPage = ({ setCurrentPage, setLoggedInUser }) => {
   );
 };
 
+// AdminRegistrationForm Component - Handles admin registration
+const AdminRegistrationForm = ({ setCurrentPage }) => {
+  const [formData, setFormData] = useState({
+    name: "",
+    phoneNumber: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [errors, setErrors] = useState({});
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.name.trim()) newErrors.name = "Name is required";
+    if (!formData.phoneNumber.trim())
+      newErrors.phoneNumber = "Phone Number is required";
+    else if (!/^\d{10,15}$/.test(formData.phoneNumber))
+      newErrors.phoneNumber = "Phone Number is invalid";
+    if (!formData.email.trim()) newErrors.email = "Email is required";
+    else if (!/\S+@\S+\.\S+/.test(formData.email))
+      newErrors.email = "Email is invalid";
+    if (!formData.password) newErrors.password = "Password is required";
+    if (formData.password !== formData.confirmPassword)
+      newErrors.confirmPassword = "Passwords do not match";
+    return newErrors;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      setIsSubmitted(false);
+    } else {
+      // Check if email already exists in local storage for admins
+      const existingAdmins =
+        JSON.parse(localStorage.getItem("doubtDeskAdmins")) || [];
+      const emailExists = existingAdmins.some(
+        (admin) => admin.email === formData.email
+      );
+
+      if (emailExists) {
+        setErrors({ email: "This email is already registered." });
+        setIsSubmitted(false);
+        return;
+      }
+
+      setErrors({});
+      setIsSubmitted(true);
+
+      const newAdmin = {
+        name: formData.name,
+        phoneNumber: formData.phoneNumber,
+        email: formData.email,
+        password: formData.password, // In a real app, hash this password!
+      };
+
+      localStorage.setItem(
+        "doubtDeskAdmins",
+        JSON.stringify([...existingAdmins, newAdmin])
+      );
+      console.log("Admin Registration Data:", newAdmin);
+
+      setTimeout(() => {
+        setCurrentPage("admin-login");
+      }, 1500);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-purple-100 flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full text-center border border-purple-200">
+        <h2 className="text-4xl font-bold text-gray-800 mb-8">
+          ADMIN REGISTRATION
+        </h2>
+        {isSubmitted && (
+          <div
+            className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6"
+            role="alert"
+          >
+            <strong className="font-bold">Success!</strong>
+            <span className="block sm:inline">
+              Your registration has been submitted. Redirecting to login...
+            </span>
+          </div>
+        )}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <input
+              type="text"
+              name="name"
+              placeholder="Enter Your Name"
+              value={formData.name}
+              onChange={handleChange}
+              className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200 ${
+                errors.name ? "border-red-500" : "border-gray-300"
+              }`}
+            />
+            {errors.name && (
+              <p className="text-red-500 text-xs italic mt-1 text-left">
+                {errors.name}
+              </p>
+            )}
+          </div>
+          <div>
+            <input
+              type="text"
+              name="phoneNumber"
+              placeholder="Enter Your Phone Number"
+              value={formData.phoneNumber}
+              onChange={handleChange}
+              className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200 ${
+                errors.phoneNumber ? "border-red-500" : "border-gray-300"
+              }`}
+            />
+            {errors.phoneNumber && (
+              <p className="text-red-500 text-xs italic mt-1 text-left">
+                {errors.phoneNumber}
+              </p>
+            )}
+          </div>
+          <div>
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter Your Email Address"
+              value={formData.email}
+              onChange={handleChange}
+              className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200 ${
+                errors.email ? "border-red-500" : "border-gray-300"
+              }`}
+            />
+            {errors.email && (
+              <p className="text-red-500 text-xs italic mt-1 text-left">
+                {errors.email}
+              </p>
+            )}
+          </div>
+          <div>
+            <input
+              type="password"
+              name="password"
+              placeholder="Enter Password"
+              value={formData.password}
+              onChange={handleChange}
+              className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200 ${
+                errors.password ? "border-red-500" : "border-gray-300"
+              }`}
+            />
+            {errors.password && (
+              <p className="text-red-500 text-xs italic mt-1 text-left">
+                {errors.password}
+              </p>
+            )}
+          </div>
+          <div>
+            <input
+              type="password"
+              name="confirmPassword"
+              placeholder="Confirm Password"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200 ${
+                errors.confirmPassword ? "border-red-500" : "border-gray-300"
+              }`}
+            />
+            {errors.confirmPassword && (
+              <p className="text-red-500 text-xs italic mt-1 text-left">
+                {errors.confirmPassword}
+              </p>
+            )}
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-6 py-3 rounded-md font-semibold hover:from-purple-600 hover:to-indigo-600 transition-all duration-300 shadow-lg"
+          >
+            Submit
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+// AdminLoginPage Component - Handles admin login
+const AdminLoginPage = ({ setCurrentPage, setLoggedInUser }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  // Hardcoded admin credentials for demonstration
+  const HARDCODED_ADMIN_EMAIL = "admin@doubtdesk.com";
+  const HARDCODED_ADMIN_PASSWORD = "adminpassword";
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    setError("");
+    setIsSubmitted(false);
+
+    if (!email.trim()) {
+      setError("Email is required.");
+      return;
+    }
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      setError("Email is invalid.");
+      return;
+    }
+    if (!password.trim()) {
+      setError("Password is required.");
+      return;
+    }
+
+    // Check hardcoded admin first
+    if (
+      email === HARDCODED_ADMIN_EMAIL &&
+      password === HARDCODED_ADMIN_PASSWORD
+    ) {
+      setIsSubmitted(true);
+      setLoggedInUser({ email: HARDCODED_ADMIN_EMAIL, role: "admin" });
+      console.log("Hardcoded Admin Login Successful");
+      setTimeout(() => {
+        setCurrentPage("admin-dashboard");
+      }, 1500);
+      return;
+    }
+
+    // Check registered admins from local storage
+    const existingAdmins =
+      JSON.parse(localStorage.getItem("doubtDeskAdmins")) || [];
+    const foundAdmin = existingAdmins.find(
+      (admin) => admin.email === email && admin.password === password
+    );
+
+    if (foundAdmin) {
+      setIsSubmitted(true);
+      setLoggedInUser({ email: foundAdmin.email, role: "admin" });
+      console.log("Registered Admin Login Successful:", foundAdmin);
+      setTimeout(() => {
+        setCurrentPage("admin-dashboard");
+      }, 1500);
+    } else {
+      setError(
+        "Invalid email or password. Please register if you don't have an account."
+      );
+      setIsSubmitted(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full text-center border border-red-200">
+        <h2 className="text-4xl font-bold text-gray-800 mb-8">ADMIN LOGIN</h2>
+        {isSubmitted && (
+          <div
+            className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6"
+            role="alert"
+          >
+            <strong className="font-bold">Success!</strong>
+            <span className="block sm:inline">
+              Logging in. Redirecting to dashboard...
+            </span>
+          </div>
+        )}
+        <form onSubmit={handleLogin} className="space-y-6">
+          <div>
+            <input
+              type="email"
+              placeholder="Enter Admin Email"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setError("");
+              }}
+              className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-200 ${
+                error && !email.trim() ? "border-red-500" : "border-gray-300"
+              }`}
+            />
+          </div>
+          <div>
+            <input
+              type="password"
+              placeholder="Enter Admin Password"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setError("");
+              }}
+              className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-200 ${
+                error && !password.trim() ? "border-red-500" : "border-gray-300"
+              }`}
+            />
+            {error && (
+              <p className="text-red-500 text-xs italic mt-1">{error}</p>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-gradient-to-r from-red-500 to-orange-500 text-white px-6 py-3 rounded-md font-semibold hover:from-red-600 hover:to-orange-600 transition-all duration-300 shadow-lg"
+          >
+            Login
+          </button>
+        </form>
+
+        <p className="mt-8 text-gray-700">
+          Don't have an account?{" "}
+          <a
+            href="#"
+            onClick={() => setCurrentPage("admin-registration")}
+            className="text-blue-600 font-semibold hover:underline"
+          >
+            Register Now.
+          </a>
+        </p>
+      </div>
+    </div>
+  );
+};
+
 // StudentsManagement Component - Admin view for students
 const StudentsManagement = ({ setCurrentPage }) => {
   const students = [
@@ -3204,6 +3530,8 @@ const App = () => {
         return <TeacherRegistrationForm setCurrentPage={setCurrentPage} />;
       case "student-registration":
         return <StudentRegistrationForm setCurrentPage={setCurrentPage} />;
+      case "admin-registration": // New case for admin registration
+        return <AdminRegistrationForm setCurrentPage={setCurrentPage} />;
       case "student-login":
         return (
           <StudentLoginPage
@@ -3228,6 +3556,13 @@ const App = () => {
       case "teacher-login":
         return (
           <TeacherLoginPage
+            setCurrentPage={setCurrentPage}
+            setLoggedInUser={setLoggedInUser}
+          />
+        );
+      case "admin-login": // New case for admin login
+        return (
+          <AdminLoginPage
             setCurrentPage={setCurrentPage}
             setLoggedInUser={setLoggedInUser}
           />
@@ -3569,6 +3904,14 @@ const Navbar = ({
                       >
                         Student
                       </a>
+                      <a
+                        href="#"
+                        onClick={() => handleJoinOptionClick("admin-login")}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-indigo-600"
+                        role="menuitem"
+                      >
+                        Admin
+                      </a>
                     </div>
                   </div>
                 )}
@@ -3797,6 +4140,13 @@ const Navbar = ({
                         className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-indigo-600 rounded-md"
                       >
                         Student
+                      </a>
+                      <a
+                        href="#"
+                        onClick={() => handleJoinOptionClick("admin-login")}
+                        className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-indigo-600 rounded-md"
+                      >
+                        Admin
                       </a>
                     </div>
                   )}
