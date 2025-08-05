@@ -196,39 +196,36 @@ const Navbar = ({
                   </button>
                   {isNotificationsOpen && (
                     <div className="absolute right-0 mt-2 w-80 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
-                      <div
-                        className="py-1"
-                        role="menu"
-                        aria-orientation="vertical"
-                        aria-labelledby="options-menu"
-                      >
+                      <div className="py-1">
+                        {/* Clear All বাটন যোগ করা হয়েছে */}
+                        {notifications.length > 0 && (
+                          <div className="text-right px-4 py-1 border-b">
+                            <button
+                              onClick={clearNotifications}
+                              className="text-sm text-blue-600 hover:underline"
+                            >
+                              Clear All
+                            </button>
+                          </div>
+                        )}
                         {notifications.length === 0 ? (
                           <p className="px-4 py-2 text-sm text-gray-500">
-                            No notifications.
+                            No new notifications.
                           </p>
                         ) : (
-                          notifications
-                            .filter(
-                              (notif) =>
-                                notif.recipientEmail === loggedInUser.email
-                            )
-                            .map((notif) => (
-                              <div
-                                key={notif.id}
-                                onClick={() =>
-                                  handleNotificationItemClick(notif)
-                                }
-                                className={`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer ${
-                                  notif.read ? "bg-gray-50" : "font-semibold"
-                                }`}
-                                role="menuitem"
-                              >
-                                <p>{notif.message}</p>
-                                <p className="text-xs text-gray-500 mt-1">
-                                  {notif.timestamp}
-                                </p>
-                              </div>
-                            ))
+                          notifications.map((notif) => (
+                            <div
+                              key={notif.id}
+                              onClick={() => handleNotificationItemClick(notif)}
+                              className={`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer`}
+                              role="menuitem"
+                            >
+                              <p>{notif.message}</p>
+                              <p className="text-xs text-gray-500 mt-1">
+                                {notif.timestamp}
+                              </p>
+                            </div>
+                          ))
                         )}
                       </div>
                     </div>

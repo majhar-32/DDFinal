@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 const QuestionsAnswersManagement = ({ setCurrentPage }) => {
   const [questions, setQuestions] = useState([]);
-  const [viewingQuestion, setViewingQuestion] = useState(null); // বিস্তারিত দেখার জন্য স্টেট
+  const [viewingQuestion, setViewingQuestion] = useState(null);
 
   useEffect(() => {
     const storedQuestions =
@@ -10,17 +10,26 @@ const QuestionsAnswersManagement = ({ setCurrentPage }) => {
     setQuestions(storedQuestions);
   }, []);
 
-  // প্রশ্ন মুছে ফেলার ফাংশন
   const handleDeleteQuestion = (questionId) => {
-    if (window.confirm("Are you sure you want to delete this question permanently?")) {
-      const updatedQuestions = questions.filter(q => q.id !== questionId);
+    if (
+      window.confirm(
+        "Are you sure you want to delete this question permanently?"
+      )
+    ) {
+      const updatedQuestions = questions.filter((q) => q.id !== questionId);
       setQuestions(updatedQuestions);
-      localStorage.setItem("doubtDeskQuestions", JSON.stringify(updatedQuestions));
+      localStorage.setItem(
+        "doubtDeskQuestions",
+        JSON.stringify(updatedQuestions)
+      );
     }
   };
 
+  // স্ট্যাটাস অনুযায়ী প্রশ্ন গণনা
   const pendingCount = questions.filter((q) => q.status === "pending").length;
-  const solvedCount = questions.filter((q) => q.status === "solved").length;
+  const solvedCount = questions.filter(
+    (q) => q.status === "solved" || q.status === "satisfied"
+  ).length;
   const followUpPendingCount = questions.filter(
     (q) => q.status === "follow-up-pending"
   ).length;
@@ -34,6 +43,7 @@ const QuestionsAnswersManagement = ({ setCurrentPage }) => {
         <h2 className="text-4xl font-bold text-purple-600 mb-8">
           Question & Answer Management ({questions.length} Total)
         </h2>
+
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <div className="bg-yellow-50 p-4 rounded-lg shadow-sm">
@@ -61,7 +71,7 @@ const QuestionsAnswersManagement = ({ setCurrentPage }) => {
             </p>
           </div>
         </div>
-        
+
         {questions.length === 0 ? (
           <p className="text-lg text-gray-700">No questions asked yet.</p>
         ) : (
@@ -101,7 +111,9 @@ const QuestionsAnswersManagement = ({ setCurrentPage }) => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm">
                       <span
                         className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          item.status.includes("solved")
+                          ["solved", "satisfied", "follow-up-solved"].includes(
+                            item.status
+                          )
                             ? "bg-green-100 text-green-800"
                             : "bg-yellow-100 text-yellow-800"
                         }`}
@@ -110,18 +122,18 @@ const QuestionsAnswersManagement = ({ setCurrentPage }) => {
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm space-x-2">
-                        <button 
-                            onClick={() => setViewingQuestion(item)}
-                            className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md font-medium"
-                        >
-                            View
-                        </button>
-                        <button 
-                            onClick={() => handleDeleteQuestion(item.id)}
-                            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md font-medium"
-                        >
-                            Delete
-                        </button>
+                      <button
+                        onClick={() => setViewingQuestion(item)}
+                        className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md font-medium"
+                      >
+                        View
+                      </button>
+                      <button
+                        onClick={() => handleDeleteQuestion(item.id)}
+                        className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md font-medium"
+                      >
+                        Delete
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -132,34 +144,44 @@ const QuestionsAnswersManagement = ({ setCurrentPage }) => {
         <div className="flex justify-center mt-8">
           <button
             onClick={() => setCurrentPage("admin-dashboard")}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline"
+            className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg"
           >
             Back to Dashboard
           </button>
         </div>
       </div>
 
-      {/* Details Modal */}
       {viewingQuestion && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg shadow-xl p-8 max-w-2xl w-full">
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">Question Details</h3>
+            <h3 className="text-2xl font-bold text-gray-800 mb-4">
+              Question Details
+            </h3>
             <div className="text-left space-y-3">
-                <p><strong>Student:</strong> {viewingQuestion.studentEmail}</p>
-                <p><strong>Course:</strong> {viewingQuestion.course}</p>
-                <p><strong>Subject:</strong> {viewingQuestion.subject}</p>
-                <div className="p-3 bg-gray-50 rounded-md border">
-                    <p className="font-semibold">Question:</p>
-                    <p>{viewingQuestion.description}</p>
+              <p>
+                <strong>Student:</strong> {viewingQuestion.studentEmail}
+              </p>
+              <div className="p-3 bg-gray-50 rounded-md border">
+                <p className="font-semibold">Question:</p>
+                <p>{viewingQuestion.description}</p>
+              </div>
+
+              {["solved", "satisfied", "follow-up-solved"].includes(
+                viewingQuestion.status
+              ) ? (
+                <div className="p-3 bg-green-50 rounded-md border border-green-200">
+                  <p className="font-semibold text-green-800">
+                    Solution by {viewingQuestion.solvedByTeacher}:
+                  </p>
+                  <p className="whitespace-pre-wrap">
+                    {viewingQuestion.solution}
+                  </p>
                 </div>
-                {viewingQuestion.status.includes("solved") ? (
-                    <div className="p-3 bg-green-50 rounded-md border border-green-200">
-                        <p className="font-semibold text-green-800">Solution by {viewingQuestion.solvedByTeacher}:</p>
-                        <p className="whitespace-pre-wrap">{viewingQuestion.solution}</p>
-                    </div>
-                ) : (
-                    <p className="text-yellow-600">This question has not been solved yet.</p>
-                )}
+              ) : (
+                <p className="text-yellow-600 font-semibold p-3 bg-yellow-50 rounded-md border">
+                  This question has not been solved yet.
+                </p>
+              )}
             </div>
             <div className="text-right mt-6">
               <button

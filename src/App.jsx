@@ -148,14 +148,13 @@ const App = () => {
       timestamp: new Date().toLocaleString(),
       type,
     };
-    setNotifications((prev) => [...prev, newNotification]);
+    setNotifications((prev) => [newNotification, ...prev]);
   };
 
   const markNotificationAsRead = (notificationId) => {
+    // filter() ব্যবহার করে যে নোটিফিকেশনে ক্লিক করা হয়েছে, সেটিকে বাদ দিয়ে বাকিগুলো রাখা হচ্ছে
     setNotifications((prev) =>
-      prev.map((notif) =>
-        notif.id === notificationId ? { ...notif, read: true } : notif
-      )
+      prev.filter((notif) => notif.id !== notificationId)
     );
   };
 

@@ -18,14 +18,18 @@ const SolutionForm = ({
     }
 
     setError("");
-    onSolve(question.id, solutionText, {}, loggedInUser.email);
 
+    // স্ট্যাটাস সঠিকভাবে নির্ধারণ করা হচ্ছে
+    const newStatus =
+      question.status === "follow-up-pending" ? "follow-up-solved" : "solved";
+
+    // onSolve ফাংশনকে নতুন স্ট্যাটাস সহ কল করা হচ্ছে
+    onSolve(question.id, solutionText, {}, loggedInUser.email, newStatus);
+
+    // ছাত্রের জন্য নোটিফিকেশন তৈরি করা
     const notificationMessage =
-      question.status === "follow-up-pending"
-        ? `Your follow-up question has been solved: "${question.description.substring(
-            0,
-            30
-          )}..."`
+      newStatus === "follow-up-solved"
+        ? `Your follow-up question has been solved.`
         : `Your question "${question.description.substring(
             0,
             30
@@ -42,16 +46,25 @@ const SolutionForm = ({
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg shadow-xl p-8 max-w-xl w-full border border-green-200">
         <h3 className="text-2xl font-bold text-green-600 mb-4 text-center">
-          Solve Question
+          {question.status === "follow-up-pending"
+            ? "Solve Follow-up Question"
+            : "Solve Question"}
         </h3>
-        <div className="mb-4 p-4 bg-gray-50 rounded-md border border-gray-200">
+        <div className="mb-4 p-4 bg-gray-50 rounded-md border border-gray-200 text-left">
           <p className="text-gray-700 text-base">
-            Question: {question.description}
+            <strong>Question:</strong> {question.description}
           </p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
+            <label
+              htmlFor="solutionText"
+              className="block text-gray-700 text-sm font-bold mb-2"
+            >
+              Your Solution:
+            </label>
             <textarea
+              id="solutionText"
               value={solutionText}
               onChange={(e) => {
                 setSolutionText(e.target.value);
@@ -67,6 +80,7 @@ const SolutionForm = ({
               <p className="text-red-500 text-xs italic mt-1">{error}</p>
             )}
           </div>
+
           <div className="flex justify-center space-x-4">
             <button
               type="submit"

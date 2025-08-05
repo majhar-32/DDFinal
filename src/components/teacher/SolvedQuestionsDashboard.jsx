@@ -7,9 +7,12 @@ const SolvedQuestionsDashboard = ({ setCurrentPage, loggedInUser }) => {
   useEffect(() => {
     const storedQuestions =
       JSON.parse(localStorage.getItem("doubtDeskQuestions")) || [];
+    // সমাধান করা সব ধরনের প্রশ্ন ফিল্টার করা হচ্ছে
     const filteredSolvedQuestions = storedQuestions.filter(
       (q) =>
-        (q.status === "solved" || q.status === "follow-up-solved") &&
+        (q.status === "solved" ||
+          q.status === "follow-up-solved" ||
+          q.status === "satisfied") &&
         q.solvedByTeacher === loggedInUser.email
     );
     setSolvedQuestions(filteredSolvedQuestions);
@@ -32,10 +35,10 @@ const SolvedQuestionsDashboard = ({ setCurrentPage, loggedInUser }) => {
 
         {solvedQuestions.length === 0 ? (
           <p className="text-lg text-gray-700">
-            No questions solved by you yet.
+            You haven't solved any questions yet.
           </p>
         ) : (
-          <div className="space-y-4 max-h-96 overflow-y-auto">
+          <div className="space-y-4 max-h-96 overflow-y-auto pr-4">
             {solvedQuestions.map((question) => (
               <div
                 key={question.id}
@@ -43,17 +46,25 @@ const SolvedQuestionsDashboard = ({ setCurrentPage, loggedInUser }) => {
               >
                 <div className="text-left flex-grow mb-3 md:mb-0">
                   <p className="text-green-800 font-semibold mb-1">
-                    Course: {question.course} | Subject: {question.subject}
+                    {question.description.substring(0, 50)}...
+                    {/* ফলো-আপ প্রশ্ন হলে তা দেখানো হচ্ছে */}
+                    {question.originalQuestionId && (
+                      <span className="text-sm text-gray-500">
+                        {" "}
+                        (Follow-up)
+                      </span>
+                    )}
                   </p>
-                  <p className="text-gray-700 text-base">
-                    {question.description}
+                  <p className="text-xs text-gray-600">
+                    Status:{" "}
+                    <span className="font-medium">{question.status}</span>
                   </p>
                 </div>
                 <button
                   onClick={() => handleViewSolutionClick(question)}
-                  className="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-md font-medium transition-colors duration-200 shadow-md flex-shrink-0"
+                  className="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-md font-medium"
                 >
-                  View Solution
+                  View Details
                 </button>
               </div>
             ))}
@@ -61,22 +72,30 @@ const SolvedQuestionsDashboard = ({ setCurrentPage, loggedInUser }) => {
         )}
       </div>
 
+      {/* Solution Details Modal */}
       {viewingSolution && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl p-8 max-w-xl w-full border border-purple-200">
-            <h3 className="text-2xl font-bold text-purple-600 mb-4 text-center">
-              Question Solution
+          <div className="bg-white rounded-lg shadow-xl p-8 max-w-xl w-full text-left">
+            <h3 className="text-2xl font-bold text-gray-800 mb-4">
+              {viewingSolution.originalQuestionId
+                ? "Follow-up Details"
+                : "Question Details"}
             </h3>
-            <div className="mb-6 p-4 bg-purple-100 rounded-md border border-purple-200">
-              <p className="text-purple-800 font-semibold mb-1">Solution:</p>
-              <p className="text-purple-700 text-base whitespace-pre-wrap">
-                {viewingSolution.solution}
+            <div className="space-y-2">
+              <p>
+                <strong>Question:</strong> {viewingSolution.description}
+              </p>
+              <p>
+                <strong>Solution:</strong> {viewingSolution.solution}
+              </p>
+              <p>
+                <strong>Status:</strong> {viewingSolution.status}
               </p>
             </div>
-            <div className="flex justify-center">
+            <div className="text-right mt-6">
               <button
                 onClick={handleCloseSolutionView}
-                className="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-5 rounded-lg focus:outline-none focus:shadow-outline"
+                className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded"
               >
                 Close
               </button>

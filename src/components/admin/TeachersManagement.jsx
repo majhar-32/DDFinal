@@ -21,7 +21,8 @@ const TeachersManagement = ({ setCurrentPage }) => {
   const getSolvedQuestionsCount = (teacherEmail) => {
     return questions.filter(
       (q) =>
-        (q.status === "solved" || q.status === "follow-up-solved") &&
+        // এখন "satisfied" স্ট্যাটাসও গণনা করা হচ্ছে
+        (q.status === "solved" || q.status === "satisfied") &&
         q.solvedByTeacher === teacherEmail
     ).length;
   };

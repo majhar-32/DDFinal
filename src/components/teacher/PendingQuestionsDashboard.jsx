@@ -12,51 +12,11 @@ const PendingQuestionsDashboard = ({
   const [solvingQuestion, setSolvingQuestion] = useState(null);
   const questionRefs = useRef({});
 
-  const sampleQuestions = [
-    {
-      id: 1,
-      studentEmail: "student1@example.com",
-      course: "Engineering + Biology Admission Program 2025",
-      subject: "Physics 1st Paper",
-      description: "What is the principle of superposition of waves?",
-      timestamp: "2025-07-22, 10:00:00 AM",
-      status: "pending",
-      solution: "",
-      solvedByTeacher: null,
-      attachments: { image: null, voice: null, video: null, file: null },
-    },
-    {
-      id: 2,
-      studentEmail: "student2@example.com",
-      course: "SSC Full Course (Science Group)",
-      subject: "Chemistry",
-      description: "Explain the process of electrolysis of water.",
-      timestamp: "2025-07-22, 11:30:00 AM",
-      status: "pending",
-      solution: "",
-      solvedByTeacher: null,
-      attachments: {
-        image: "diagram.png",
-        voice: null,
-        video: null,
-        file: null,
-      },
-    },
-  ];
-
   useEffect(() => {
     const storedQuestions =
       JSON.parse(localStorage.getItem("doubtDeskQuestions")) || [];
-    if (storedQuestions.length === 0) {
-      localStorage.setItem(
-        "doubtDeskQuestions",
-        JSON.stringify(sampleQuestions)
-      );
-      setAllQuestions(sampleQuestions);
-    } else {
-      setAllQuestions(storedQuestions);
-    }
-  }, []);
+    setAllQuestions(storedQuestions);
+  }, [solvingQuestion]); // সমাধান করার পর UI রিফ্রেশ হবে
 
   useEffect(() => {
     if (highlightQuestionId && questionRefs.current[highlightQuestionId]) {
@@ -69,7 +29,7 @@ const PendingQuestionsDashboard = ({
       }, 3000);
       return () => clearTimeout(timer);
     }
-  }, [highlightQuestionId]);
+  }, [highlightQuestionId, allQuestions]);
 
   const handleSolveClick = (question) => {
     setSolvingQuestion(question);
@@ -79,16 +39,16 @@ const PendingQuestionsDashboard = ({
     questionId,
     solutionText,
     solutionAttachments,
-    solvedByTeacherEmail
+    solvedByTeacherEmail,
+    newStatus
   ) => {
     const updatedQuestions = allQuestions.map((q) =>
       q.id === questionId
         ? {
             ...q,
-            status:
-              q.status === "follow-up-pending" ? "follow-up-solved" : "solved",
+            status: newStatus,
             solution: solutionText,
-            solutionAttachments: solutionAttachments,
+            solutionAttachments,
             solvedByTeacher: solvedByTeacherEmail,
           }
         : q
@@ -105,9 +65,12 @@ const PendingQuestionsDashboard = ({
     setSolvingQuestion(null);
   };
 
+  // ধাপ ২ এর মূল পরিবর্তন: ফিল্টার লজিক আপডেট করা হয়েছে
   const pendingQuestions = allQuestions.filter(
     (q) =>
+      // সব সাধারণ পেন্ডিং প্রশ্ন
       q.status === "pending" ||
+      // শুধুমাত্র সেই ফলো-আপ প্রশ্ন যা এই শিক্ষকের কাছে পাঠানো হয়েছে
       (q.status === "follow-up-pending" &&
         q.solvedByTeacher === loggedInUser.email)
   );
@@ -121,15 +84,15 @@ const PendingQuestionsDashboard = ({
 
         {pendingQuestions.length === 0 ? (
           <p className="text-lg text-gray-700">
-            No pending doubts at the moment.
+            No pending questions assigned to you.
           </p>
         ) : (
-          <div className="space-y-4 max-h-96 overflow-y-auto">
+          <div className="space-y-4 max-h-96 overflow-y-auto pr-4">
             {pendingQuestions.map((question) => (
               <div
                 key={question.id}
                 ref={(el) => (questionRefs.current[question.id] = el)}
-                className={`bg-blue-100 p-4 rounded-lg shadow-sm border border-blue-200 flex flex-col md:flex-row justify-between items-start md:items-center ${
+                className={`bg-blue-50 p-4 rounded-lg shadow-sm border border-blue-200 flex flex-col md:flex-row justify-between items-start md:items-center ${
                   highlightQuestionId === question.id
                     ? "ring-4 ring-orange-500 ring-opacity-75"
                     : ""
@@ -137,18 +100,21 @@ const PendingQuestionsDashboard = ({
               >
                 <div className="text-left flex-grow mb-3 md:mb-0">
                   <p className="text-blue-800 font-semibold mb-1">
-                    Course: {question.course} | Subject: {question.subject}
+                    {question.course} | {question.subject}
                   </p>
                   <p className="text-gray-700 text-base">
                     {question.description}
                   </p>
-                  <p className="text-gray-500 text-xs mt-1">
-                    Asked by: {question.studentEmail} on: {question.timestamp}
-                  </p>
+                  {/* ফলো-আপ প্রশ্ন চেনার জন্য একটি ইন্ডিকেটর */}
+                  {question.status === "follow-up-pending" && (
+                    <p className="text-orange-600 text-sm font-semibold mt-1">
+                      (Follow-up Question)
+                    </p>
+                  )}
                 </div>
                 <button
                   onClick={() => handleSolveClick(question)}
-                  className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-md font-medium transition-colors duration-200 shadow-md flex-shrink-0"
+                  className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-md font-medium"
                 >
                   Solve
                 </button>
