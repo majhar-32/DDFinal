@@ -1,5 +1,61 @@
 import React, { useState, useRef, useEffect } from "react";
 
+// Initial sample courses with isActive property
+// This data will be used to initialize localStorage if it's empty
+const initialCoursesData = [
+  {
+    topTitle: "Engineering",
+    programTitle: "Admission Program 2025",
+    courseName: "Engineering + Biology Admission Program 2025",
+    features: [
+      "All subjects covered",
+      "Ask unlimited questions",
+      "Subject-wise expert teachers",
+      "Chapter-specific doubt posting",
+      "Fast and quality answers",
+      "Answers visible only to you",
+      "24/7 doubt posting facility",
+    ],
+    priceText: "2000 BDT",
+    enrollButtonText: "Enroll Now",
+    isActive: true, // New property: course is active by default
+  },
+  {
+    topTitle: "SSC",
+    programTitle: "Full Preparation Batch 2025",
+    courseName: "SSC Full Course (Science Group)",
+    features: [
+      "All subjects covered",
+      "Ask unlimited questions",
+      "Subject-wise expert teachers",
+      "Chapter-specific doubt posting",
+      "Fast and quality answers",
+      "Answers visible only to you",
+      "24/7 doubt posting facility",
+    ],
+    priceText: "1000 BDT",
+    enrollButtonText: "Enroll Now",
+    isActive: true, // New property: course is active by default
+  },
+  {
+    topTitle: "HSC",
+    programTitle: "Academic Program Prime Batch 2027",
+    courseName: "HSC 1st Year (Prime Batch)",
+    features: [
+      "All subjects covered",
+      "Ask unlimited questions",
+      "Subject-wise expert teachers",
+      "Chapter-specific doubt posting",
+      "Fast and quality answers",
+      "Answers visible only to you",
+      "24/7 doubt posting facility",
+    ],
+    priceText: "1500 BDT",
+    enrollButtonText: "Enroll Now",
+    isActive: true, // New property: course is active by default
+  },
+];
+
 // CourseCard Component - Displays individual course details and enrollment options
 const CourseCard = ({
   topTitle,
@@ -8,8 +64,8 @@ const CourseCard = ({
   features,
   priceText,
   enrollButtonText,
-  onEnrollClick,
   isEnrolled, // New prop to check if the user is already enrolled
+  onEnrollClick, // Passed down from App
 }) => {
   return (
     <div className="bg-white rounded-xl shadow-lg p-4 flex flex-col items-center text-center transform transition-transform duration-300 hover:scale-105 border border-gray-200 overflow-hidden">
@@ -167,7 +223,7 @@ const TeacherRegistrationForm = ({ setCurrentPage }) => {
     if (!formData.institute.trim())
       newErrors.institute = "Institute is required";
     if (!formData.email.trim()) newErrors.email = "Email is required";
-    else if (!/\S+@\S+\.\S+/.test(formData.email))
+    else if (!/\S+@\S+\.\S/.test(formData.email))
       newErrors.email = "Email is invalid";
     if (!formData.password) newErrors.password = "Password is required";
     if (formData.password !== formData.confirmPassword)
@@ -202,6 +258,7 @@ const TeacherRegistrationForm = ({ setCurrentPage }) => {
         institute: formData.institute,
         email: formData.email,
         password: formData.password, // In a real app, hash this password!
+        isActive: true, // Teacher is active by default
       };
 
       localStorage.setItem(
@@ -220,7 +277,7 @@ const TeacherRegistrationForm = ({ setCurrentPage }) => {
     <div className="min-h-screen bg-blue-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full text-center border border-blue-200">
         <h2 className="text-4xl font-bold text-gray-800 mb-8">
-          TEACHER REGISTRATION
+          Teacher Registration
         </h2>
         {isSubmitted && (
           <div
@@ -238,7 +295,7 @@ const TeacherRegistrationForm = ({ setCurrentPage }) => {
             <input
               type="text"
               name="name"
-              placeholder="Enter Your Name"
+              placeholder="Enter your name"
               value={formData.name}
               onChange={handleChange}
               className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ${
@@ -255,7 +312,7 @@ const TeacherRegistrationForm = ({ setCurrentPage }) => {
             <input
               type="text"
               name="institute"
-              placeholder="Enter Your Institute"
+              placeholder="Enter your institute's name"
               value={formData.institute}
               onChange={handleChange}
               className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ${
@@ -273,7 +330,7 @@ const TeacherRegistrationForm = ({ setCurrentPage }) => {
             <input
               type="email"
               name="email"
-              placeholder="Enter Your Email Address"
+              placeholder="Enter your email address"
               value={formData.email}
               onChange={handleChange}
               className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ${
@@ -290,7 +347,7 @@ const TeacherRegistrationForm = ({ setCurrentPage }) => {
             <input
               type="password"
               name="password"
-              placeholder="Enter Password"
+              placeholder="Enter password"
               value={formData.password}
               onChange={handleChange}
               className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ${
@@ -307,7 +364,7 @@ const TeacherRegistrationForm = ({ setCurrentPage }) => {
             <input
               type="password"
               name="confirmPassword"
-              placeholder="Confirm Password"
+              placeholder="Confirm password"
               value={formData.confirmPassword}
               onChange={handleChange}
               className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ${
@@ -351,7 +408,7 @@ const StudentRegistrationForm = ({ setCurrentPage }) => {
   const validateForm = () => {
     const newErrors = {};
     if (!formData.gradeLevel)
-      newErrors.gradeLevel = "Grade or Level is required";
+      newErrors.gradeLevel = "Grade or level is required";
     if (!formData.email.trim()) newErrors.email = "Email is required";
     else if (!/\S+@\S+\.\S+/.test(formData.email))
       newErrors.email = "Email is invalid";
@@ -406,7 +463,7 @@ const StudentRegistrationForm = ({ setCurrentPage }) => {
     <div className="min-h-screen bg-blue-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full text-center border border-blue-200">
         <h2 className="text-4xl font-bold text-gray-800 mb-8">
-          STUDENT REGISTRATION
+          Student Registration
         </h2>
         {isSubmitted && (
           <div
@@ -424,7 +481,7 @@ const StudentRegistrationForm = ({ setCurrentPage }) => {
             <input
               type="text"
               name="name"
-              placeholder="Enter Your Name"
+              placeholder="Enter your name"
               value={formData.name}
               onChange={handleChange}
               className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ${
@@ -446,7 +503,7 @@ const StudentRegistrationForm = ({ setCurrentPage }) => {
                 errors.gradeLevel ? "border-red-500" : "border-gray-300"
               }`}
             >
-              <option value="">Select Level of Study</option>
+              <option value="">Select Study Level</option>
               <option value="SSC">SSC</option>
               <option value="HSC">HSC</option>
               <option value="Admission">Admission</option>
@@ -462,7 +519,7 @@ const StudentRegistrationForm = ({ setCurrentPage }) => {
             <input
               type="email"
               name="email"
-              placeholder="Enter Your Email Address"
+              placeholder="Enter your email address"
               value={formData.email}
               onChange={handleChange}
               className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ${
@@ -479,7 +536,7 @@ const StudentRegistrationForm = ({ setCurrentPage }) => {
             <input
               type="password"
               name="password"
-              placeholder="Enter Password"
+              placeholder="Enter password"
               value={formData.password}
               onChange={handleChange}
               className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ${
@@ -496,7 +553,7 @@ const StudentRegistrationForm = ({ setCurrentPage }) => {
             <input
               type="password"
               name="confirmPassword"
-              placeholder="Confirm Password"
+              placeholder="Confirm password"
               value={formData.confirmPassword}
               onChange={handleChange}
               className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ${
@@ -578,7 +635,7 @@ const StudentLoginPage = ({
   return (
     <div className="min-h-screen bg-yellow-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full text-center border border-yellow-200">
-        <h2 className="text-4xl font-bold text-gray-800 mb-8">STUDENT LOGIN</h2>
+        <h2 className="text-4xl font-bold text-gray-800 mb-8">Student Login</h2>
         {isSubmitted && (
           <div
             className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6"
@@ -594,7 +651,7 @@ const StudentLoginPage = ({
           <div>
             <input
               type="email"
-              placeholder="Enter Your Email"
+              placeholder="Enter your email"
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
@@ -608,7 +665,7 @@ const StudentLoginPage = ({
           <div>
             <input
               type="password"
-              placeholder="Enter Your Password"
+              placeholder="Enter your password"
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
@@ -641,7 +698,7 @@ const StudentLoginPage = ({
             }}
             className="text-blue-600 font-semibold hover:underline"
           >
-            Register Now.
+            Register now.
           </a>
         </p>
       </div>
@@ -681,6 +738,12 @@ const TeacherLoginPage = ({ setCurrentPage, setLoggedInUser }) => {
     );
 
     if (foundTeacher) {
+      if (!foundTeacher.isActive) {
+        setError("Your account has been deactivated.");
+        setIsSubmitted(false);
+        return;
+      }
+
       setIsSubmitted(true);
       setLoggedInUser({ email: foundTeacher.email, role: "teacher" });
       console.log("Teacher Login Successful:", foundTeacher);
@@ -698,7 +761,7 @@ const TeacherLoginPage = ({ setCurrentPage, setLoggedInUser }) => {
   return (
     <div className="min-h-screen bg-yellow-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full text-center border border-yellow-200">
-        <h2 className="text-4xl font-bold text-gray-800 mb-8">TEACHER LOGIN</h2>
+        <h2 className="text-4xl font-bold text-gray-800 mb-8">Teacher Login</h2>
         {isSubmitted && (
           <div
             className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6"
@@ -714,7 +777,7 @@ const TeacherLoginPage = ({ setCurrentPage, setLoggedInUser }) => {
           <div>
             <input
               type="email"
-              placeholder="Enter Your Email"
+              placeholder="Enter your email"
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
@@ -728,7 +791,7 @@ const TeacherLoginPage = ({ setCurrentPage, setLoggedInUser }) => {
           <div>
             <input
               type="password"
-              placeholder="Enter Your Password"
+              placeholder="Enter your password"
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
@@ -758,7 +821,7 @@ const TeacherLoginPage = ({ setCurrentPage, setLoggedInUser }) => {
             onClick={() => setCurrentPage("teacher-registration")}
             className="text-blue-600 font-semibold hover:underline"
           >
-            Register Now.
+            Register now.
           </a>
         </p>
       </div>
@@ -787,9 +850,9 @@ const AdminRegistrationForm = ({ setCurrentPage }) => {
     const newErrors = {};
     if (!formData.name.trim()) newErrors.name = "Name is required";
     if (!formData.phoneNumber.trim())
-      newErrors.phoneNumber = "Phone Number is required";
+      newErrors.phoneNumber = "Phone number is required";
     else if (!/^\d{10,15}$/.test(formData.phoneNumber))
-      newErrors.phoneNumber = "Phone Number is invalid";
+      newErrors.phoneNumber = "Invalid phone number";
     if (!formData.email.trim()) newErrors.email = "Email is required";
     else if (!/\S+@\S+\.\S+/.test(formData.email))
       newErrors.email = "Email is invalid";
@@ -845,7 +908,7 @@ const AdminRegistrationForm = ({ setCurrentPage }) => {
     <div className="min-h-screen bg-purple-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full text-center border border-purple-200">
         <h2 className="text-4xl font-bold text-gray-800 mb-8">
-          ADMIN REGISTRATION
+          Admin Registration
         </h2>
         {isSubmitted && (
           <div
@@ -863,7 +926,7 @@ const AdminRegistrationForm = ({ setCurrentPage }) => {
             <input
               type="text"
               name="name"
-              placeholder="Enter Your Name"
+              placeholder="Enter your name"
               value={formData.name}
               onChange={handleChange}
               className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200 ${
@@ -880,7 +943,7 @@ const AdminRegistrationForm = ({ setCurrentPage }) => {
             <input
               type="text"
               name="phoneNumber"
-              placeholder="Enter Your Phone Number"
+              placeholder="Enter your phone number"
               value={formData.phoneNumber}
               onChange={handleChange}
               className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200 ${
@@ -897,7 +960,7 @@ const AdminRegistrationForm = ({ setCurrentPage }) => {
             <input
               type="email"
               name="email"
-              placeholder="Enter Your Email Address"
+              placeholder="Enter your email address"
               value={formData.email}
               onChange={handleChange}
               className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200 ${
@@ -914,7 +977,7 @@ const AdminRegistrationForm = ({ setCurrentPage }) => {
             <input
               type="password"
               name="password"
-              placeholder="Enter Password"
+              placeholder="Enter password"
               value={formData.password}
               onChange={handleChange}
               className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200 ${
@@ -931,7 +994,7 @@ const AdminRegistrationForm = ({ setCurrentPage }) => {
             <input
               type="password"
               name="confirmPassword"
-              placeholder="Confirm Password"
+              placeholder="Confirm password"
               value={formData.confirmPassword}
               onChange={handleChange}
               className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200 ${
@@ -976,7 +1039,7 @@ const AdminLoginPage = ({ setCurrentPage, setLoggedInUser }) => {
       setError("Email is required.");
       return;
     }
-    if (!/\S+@\S+\.\S+/.test(email)) {
+    if (!/\S+@\S+\.\S/.test(email)) {
       setError("Email is invalid.");
       return;
     }
@@ -1024,7 +1087,7 @@ const AdminLoginPage = ({ setCurrentPage, setLoggedInUser }) => {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full text-center border border-red-200">
-        <h2 className="text-4xl font-bold text-gray-800 mb-8">ADMIN LOGIN</h2>
+        <h2 className="text-4xl font-bold text-gray-800 mb-8">Admin Login</h2>
         {isSubmitted && (
           <div
             className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6"
@@ -1040,7 +1103,7 @@ const AdminLoginPage = ({ setCurrentPage, setLoggedInUser }) => {
           <div>
             <input
               type="email"
-              placeholder="Enter Admin Email"
+              placeholder="Enter admin email"
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
@@ -1054,7 +1117,7 @@ const AdminLoginPage = ({ setCurrentPage, setLoggedInUser }) => {
           <div>
             <input
               type="password"
-              placeholder="Enter Admin Password"
+              placeholder="Enter admin password"
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
@@ -1084,7 +1147,7 @@ const AdminLoginPage = ({ setCurrentPage, setLoggedInUser }) => {
             onClick={() => setCurrentPage("admin-registration")}
             className="text-blue-600 font-semibold hover:underline"
           >
-            Register Now.
+            Register now.
           </a>
         </p>
       </div>
@@ -1094,95 +1157,50 @@ const AdminLoginPage = ({ setCurrentPage, setLoggedInUser }) => {
 
 // StudentsManagement Component - Admin view for students
 const StudentsManagement = ({ setCurrentPage }) => {
-  const students = [
-    {
-      id: 1,
-      name: "Ahmed",
-      email: "ahmed@example.com",
-      course: "SSC Full Course",
-      status: "Active",
-    },
-    {
-      id: 2,
-      name: "Fatema",
-      email: "fatema@example.com",
-      course: "HSC 1st Year",
-      status: "Active",
-    },
-    {
-      id: 3,
-      name: "Kamal",
-      email: "kamal@example.com",
-      course: "Engineering + Biology",
-      status: "Inactive",
-    },
-    {
-      id: 4,
-      name: "Nabila",
-      email: "nabil@example.com",
-      course: "SSC Full Course",
-      status: "Active",
-    },
-  ];
+  const [students, setStudents] = useState([]);
+
+  useEffect(() => {
+    const storedStudents =
+      JSON.parse(localStorage.getItem("doubtDeskStudents")) || [];
+    setStudents(storedStudents);
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-8">
       <div className="bg-white rounded-lg shadow-xl p-8 max-w-4xl w-full text-center border border-blue-200">
         <h2 className="text-4xl font-bold text-blue-600 mb-8">
-          Student Management
+          Students({students.length} Total)
         </h2>
-        <div className="overflow-x-auto rounded-lg shadow-md">
-          <table className="min-w-full bg-white">
-            <thead className="bg-blue-100 border-b border-blue-200">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">
-                  ID
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">
-                  Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">
-                  Email
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">
-                  Course
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">
-                  Status
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {students.map((student) => (
-                <tr key={student.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                    {student.id}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                    {student.name}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                    {student.email}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                    {student.course}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <span
-                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        student.status === "Active"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-red-100 text-red-800"
-                      }`}
-                    >
-                      {student.status}
-                    </span>
-                  </td>
+        {students.length === 0 ? (
+          <p className="text-lg text-gray-700">No students registered yet.</p>
+        ) : (
+          <div className="overflow-x-auto rounded-lg shadow-md">
+            <table className="min-w-full bg-white">
+              <thead className="bg-blue-100 border-b border-blue-200">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">
+                    Email
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">
+                    Grade/Level
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {students.map((student, index) => (
+                  <tr key={index} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                      {student.email}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                      {student.gradeLevel}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
         <div className="flex justify-center mt-8">
           <button
             onClick={() => setCurrentPage("admin-dashboard")}
@@ -1198,95 +1216,113 @@ const StudentsManagement = ({ setCurrentPage }) => {
 
 // TeachersManagement Component - Admin view for teachers
 const TeachersManagement = ({ setCurrentPage }) => {
-  const teachers = [
-    {
-      id: 1,
-      name: "Mr. Rahman",
-      email: "rahman@example.com",
-      subject: "Physics",
-      status: "Active",
-    },
-    {
-      id: 2,
-      name: "Mrs. Akter",
-      email: "akter@example.com",
-      subject: "Chemistry",
-      status: "Active",
-    },
-    {
-      id: 3,
-      name: "Mr. Khan",
-      email: "khan@example.com",
-      subject: "Mathematics",
-      status: "Inactive",
-    },
-    {
-      id: 4,
-      name: "Mrs. Begum",
-      email: "begum@example.com",
-      subject: "Biology",
-      status: "Active",
-    },
-  ];
+  const [teachers, setTeachers] = useState([]);
+  const [questions, setQuestions] = useState([]);
+
+  useEffect(() => {
+    const storedTeachers =
+      JSON.parse(localStorage.getItem("doubtDeskTeachers")) || [];
+    // Ensure all teachers have an isActive property, default to true
+    const teachersWithStatus = storedTeachers.map((teacher) => ({
+      ...teacher,
+      isActive: teacher.isActive !== undefined ? teacher.isActive : true,
+    }));
+    setTeachers(teachersWithStatus);
+
+    const storedQuestions =
+      JSON.parse(localStorage.getItem("doubtDeskQuestions")) || [];
+    setQuestions(storedQuestions);
+  }, []);
+
+  const getSolvedQuestionsCount = (teacherEmail) => {
+    return questions.filter(
+      (q) =>
+        (q.status === "solved" || q.status === "follow-up-solved") &&
+        q.solvedByTeacher === teacherEmail
+    ).length;
+  };
+
+  const handleToggleTeacherStatus = (email) => {
+    const updatedTeachers = teachers.map((teacher) =>
+      teacher.email === email
+        ? { ...teacher, isActive: !teacher.isActive }
+        : teacher
+    );
+    localStorage.setItem("doubtDeskTeachers", JSON.stringify(updatedTeachers));
+    setTeachers(updatedTeachers);
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-8">
       <div className="bg-white rounded-lg shadow-xl p-8 max-w-4xl w-full text-center border border-green-200">
         <h2 className="text-4xl font-bold text-green-600 mb-8">
-          Teacher Management
+          Teachers ({teachers.length} Total)
         </h2>
-        <div className="overflow-x-auto rounded-lg shadow-md">
-          <table className="min-w-full bg-white">
-            <thead className="bg-green-100 border-b border-green-200">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-green-700 uppercase tracking-wider">
-                  ID
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-green-700 uppercase tracking-wider">
-                  Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-green-700 uppercase tracking-wider">
-                  Email
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-green-700 uppercase tracking-wider">
-                  Subject
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-green-700 uppercase tracking-wider">
-                  Status
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {teachers.map((teacher) => (
-                <tr key={teacher.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                    {teacher.id}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                    {teacher.name}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                    {teacher.email}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                    {teacher.subject}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <span
-                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        teacher.status === "Active"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-red-100 text-red-800"
-                      }`}
-                    >
-                      {teacher.status}
-                    </span>
-                  </td>
+        {teachers.length === 0 ? (
+          <p className="text-lg text-gray-700">No teachers registered yet.</p>
+        ) : (
+          <div className="overflow-x-auto rounded-lg shadow-md">
+            <table className="min-w-full bg-white">
+              <thead className="bg-green-100 border-b border-green-200">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-green-700 uppercase tracking-wider">
+                    Email
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-green-700 uppercase tracking-wider">
+                    Institute
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-green-700 uppercase tracking-wider">
+                    Questions Solved
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-green-700 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-green-700 uppercase tracking-wider">
+                    Action
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {teachers.map((teacher, index) => (
+                  <tr key={index} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                      {teacher.email}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                      {teacher.institute}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                      {getSolvedQuestionsCount(teacher.email)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      <span
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                          teacher.isActive
+                            ? "bg-green-100 text-green-800"
+                            : "bg-red-100 text-red-800"
+                        }`}
+                      >
+                        {teacher.isActive ? "Active" : "Inactive"}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      <button
+                        onClick={() => handleToggleTeacherStatus(teacher.email)}
+                        className={`px-4 py-2 rounded-md font-medium transition-colors duration-200 shadow-md ${
+                          teacher.isActive
+                            ? "bg-red-500 hover:bg-red-600 text-white"
+                            : "bg-blue-500 hover:bg-blue-600 text-white"
+                        }`}
+                      >
+                        {teacher.isActive ? "Remove" : "Retain"}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
         <div className="flex justify-center mt-8">
           <button
             onClick={() => setCurrentPage("admin-dashboard")}
@@ -1300,97 +1336,283 @@ const TeachersManagement = ({ setCurrentPage }) => {
   );
 };
 
+// AddCourseForm Component - Allows admin to add new courses
+const AddCourseForm = ({ setCurrentPage, addCourse }) => {
+  const [formData, setFormData] = useState({
+    topTitle: "",
+    programTitle: "",
+    courseName: "",
+    features: "", // Comma-separated or newline-separated string
+    priceText: "",
+  });
+  const [errors, setErrors] = useState({});
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.topTitle.trim()) newErrors.topTitle = "Top Title is required";
+    if (!formData.programTitle.trim())
+      newErrors.programTitle = "Program Title is required";
+    if (!formData.courseName.trim())
+      newErrors.courseName = "Course Name is required";
+    if (!formData.features.trim()) newErrors.features = "Features are required";
+    if (!formData.priceText.trim()) newErrors.priceText = "Price is required";
+    else if (!/^\d+\s*BDT$/i.test(formData.priceText))
+      newErrors.priceText =
+        "Price must be in 'X BDT' format (e.g., '1500 BDT')";
+    return newErrors;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      setIsSubmitted(false);
+    } else {
+      setErrors({});
+      setIsSubmitted(true);
+
+      const newCourse = {
+        topTitle: formData.topTitle,
+        programTitle: formData.programTitle,
+        courseName: formData.courseName,
+        features: formData.features
+          .split(/,?\s*\r?\n|\s*,\s*/)
+          .filter((f) => f.trim() !== ""), // Split by comma or newline
+        priceText: formData.priceText,
+        enrollButtonText: "Enroll Now", // Default
+        isActive: true, // New courses are active by default
+      };
+
+      addCourse(newCourse); // Use the function passed from App
+
+      setTimeout(() => {
+        setCurrentPage("admin-courses");
+      }, 1500);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-blue-100 flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full text-center border border-blue-200">
+        <h2 className="text-4xl font-bold text-gray-800 mb-8">
+          Add New Course
+        </h2>
+        {isSubmitted && (
+          <div
+            className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6"
+            role="alert"
+          >
+            <strong className="font-bold">Success!</strong>
+            <span className="block sm:inline">
+              New course added successfully. Redirecting...
+            </span>
+          </div>
+        )}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <input
+              type="text"
+              name="topTitle"
+              placeholder="e.g., Engineering, SSC, HSC"
+              value={formData.topTitle}
+              onChange={handleChange}
+              className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ${
+                errors.topTitle ? "border-red-500" : "border-gray-300"
+              }`}
+            />
+            {errors.topTitle && (
+              <p className="text-red-500 text-xs italic mt-1 text-left">
+                {errors.topTitle}
+              </p>
+            )}
+          </div>
+          <div>
+            <input
+              type="text"
+              name="programTitle"
+              placeholder="e.g., Admission Program 2025"
+              value={formData.programTitle}
+              onChange={handleChange}
+              className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ${
+                errors.programTitle ? "border-red-500" : "border-gray-300"
+              }`}
+            />
+            {errors.programTitle && (
+              <p className="text-red-500 text-xs italic mt-1 text-left">
+                {errors.programTitle}
+              </p>
+            )}
+          </div>
+          <div>
+            <input
+              type="text"
+              name="courseName"
+              placeholder="e.g., Engineering + Biology Admission Program 2025"
+              value={formData.courseName}
+              onChange={handleChange}
+              className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ${
+                errors.courseName ? "border-red-500" : "border-gray-300"
+              }`}
+            />
+            {errors.courseName && (
+              <p className="text-red-500 text-xs italic mt-1 text-left">
+                {errors.courseName}
+              </p>
+            )}
+          </div>
+          <div>
+            <textarea
+              name="features"
+              placeholder="Enter features, one per line or comma-separated"
+              value={formData.features}
+              onChange={handleChange}
+              rows="5"
+              className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 resize-y ${
+                errors.features ? "border-red-500" : "border-gray-300"
+              }`}
+            ></textarea>
+            {errors.features && (
+              <p className="text-red-500 text-xs italic mt-1 text-left">
+                {errors.features}
+              </p>
+            )}
+          </div>
+          <div>
+            <input
+              type="text"
+              name="priceText"
+              placeholder="e.g., 2000 BDT"
+              value={formData.priceText}
+              onChange={handleChange}
+              className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ${
+                errors.priceText ? "border-red-500" : "border-gray-300"
+              }`}
+            />
+            {errors.priceText && (
+              <p className="text-red-500 text-xs italic mt-1 text-left">
+                {errors.priceText}
+              </p>
+            )}
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-6 py-3 rounded-md font-semibold hover:from-blue-600 hover:to-indigo-600 transition-all duration-300 shadow-lg"
+          >
+            Add Course
+          </button>
+          <button
+            type="button"
+            onClick={() => setCurrentPage("admin-courses")}
+            className="w-full bg-gray-400 hover:bg-gray-500 text-white px-6 py-3 rounded-md font-semibold transition-all duration-300 shadow-lg mt-4"
+          >
+            Cancel
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 // CoursesManagement Component - Admin view for courses
-const CoursesManagement = ({ setCurrentPage }) => {
-  const courses = [
-    {
-      id: 1,
-      name: "Engineering + Biology Admission Program 2025",
-      students: 150,
-      teachers: 5,
-      status: "Active",
-    },
-    {
-      id: 2,
-      name: "SSC Full Course (Science Group)",
-      students: 200,
-      teachers: 7,
-      status: "Active",
-    },
-    {
-      id: 3,
-      name: "HSC 1st Year (Prime Batch)",
-      students: 120,
-      teachers: 4,
-      status: "Active",
-    },
-    {
-      id: 4,
-      name: "Junior Programming Basics",
-      students: 80,
-      teachers: 2,
-      status: "Upcoming",
-    },
-  ];
+const CoursesManagement = ({ setCurrentPage, courses, setCourses }) => {
+  const [localCourses, setLocalCourses] = useState([]);
+
+  useEffect(() => {
+    // Sync with the global courses state passed from App
+    setLocalCourses(courses);
+  }, [courses]);
+
+  const handleToggleCourseStatus = (courseName) => {
+    const updatedCourses = localCourses.map((course) =>
+      course.courseName === courseName
+        ? { ...course, isActive: !course.isActive }
+        : course
+    );
+    setCourses(updatedCourses); // Update global state in App
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-8">
       <div className="bg-white rounded-lg shadow-xl p-8 max-w-4xl w-full text-center border border-yellow-200">
         <h2 className="text-4xl font-bold text-yellow-600 mb-8">
-          Course Management
+          Courses ({localCourses.length} Total Courses)
         </h2>
-        <div className="overflow-x-auto rounded-lg shadow-md">
-          <table className="min-w-full bg-white">
-            <thead className="bg-yellow-100 border-b border-yellow-200">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-yellow-700 uppercase tracking-wider">
-                  ID
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-yellow-700 uppercase tracking-wider">
-                  Course Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-yellow-700 uppercase tracking-wider">
-                  Students
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-yellow-700 uppercase tracking-wider">
-                  Teachers
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-yellow-700 uppercase tracking-wider">
-                  Status
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {courses.map((course) => (
-                <tr key={course.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                    {course.id}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                    {course.name}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                    {course.students}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                    {course.teachers}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <span
-                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        course.status === "Active"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-blue-100 text-blue-800"
-                      }`}
-                    >
-                      {course.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="flex justify-end mb-6">
+          <button
+            onClick={() => setCurrentPage("add-course-form")}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline transition-all duration-300 transform hover:scale-105 shadow-md"
+          >
+            Add New Course
+          </button>
         </div>
+        {localCourses.length === 0 ? (
+          <p className="text-lg text-gray-700">No courses available yet.</p>
+        ) : (
+          <div className="overflow-x-auto rounded-lg shadow-md">
+            <table className="min-w-full bg-white">
+              <thead className="bg-yellow-100 border-b border-yellow-200">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-yellow-700 uppercase tracking-wider">
+                    Course Name
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-yellow-700 uppercase tracking-wider">
+                    Price
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-yellow-700 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-yellow-700 uppercase tracking-wider">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {localCourses.map((course, index) => (
+                  <tr key={index} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                      {course.courseName}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                      {course.priceText}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      <span
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                          course.isActive
+                            ? "bg-green-100 text-green-800"
+                            : "bg-red-100 text-red-800"
+                        }`}
+                      >
+                        {course.isActive ? "Active" : "Inactive"}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      <button
+                        onClick={() =>
+                          handleToggleCourseStatus(course.courseName)
+                        }
+                        className={`px-4 py-2 rounded-md font-medium transition-colors duration-200 shadow-md ${
+                          course.isActive
+                            ? "bg-red-500 hover:bg-red-600 text-white"
+                            : "bg-green-500 hover:bg-green-600 text-white"
+                        }`}
+                      >
+                        {course.isActive ? "Deactivate" : "Activate"}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
         <div className="flex justify-center mt-8">
           <button
             onClick={() => setCurrentPage("admin-dashboard")}
@@ -1406,95 +1628,106 @@ const CoursesManagement = ({ setCurrentPage }) => {
 
 // QuestionsAnswersManagement Component - Admin view for Q&A
 const QuestionsAnswersManagement = ({ setCurrentPage }) => {
-  const qa = [
-    {
-      id: 1,
-      question: "What is the principle of superposition of waves?",
-      student: "Ahmed",
-      teacher: "Mr. Rahman",
-      status: "Solved",
-    },
-    {
-      id: 2,
-      question: "Explain the process of electrolysis of water.",
-      student: "Fatema",
-      teacher: "Mrs. Akter",
-      status: "Pending",
-    },
-    {
-      id: 3,
-      question: "Describe the structure and function of mitochondria.",
-      student: "Kamal",
-      teacher: "Mr. Khan",
-      status: "Solved",
-    },
-    {
-      id: 4,
-      question: "What is Newton's third law of motion?",
-      student: "Nabila",
-      teacher: "Mrs. Begum",
-      status: "Pending",
-    },
-  ];
+  const [questions, setQuestions] = useState([]);
+
+  useEffect(() => {
+    const storedQuestions =
+      JSON.parse(localStorage.getItem("doubtDeskQuestions")) || [];
+    setQuestions(storedQuestions);
+  }, []);
+
+  const pendingCount = questions.filter((q) => q.status === "pending").length;
+  const solvedCount = questions.filter((q) => q.status === "solved").length;
+  const followUpPendingCount = questions.filter(
+    (q) => q.status === "follow-up-pending"
+  ).length;
+  const followUpSolvedCount = questions.filter(
+    (q) => q.status === "follow-up-solved"
+  ).length;
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-8">
       <div className="bg-white rounded-lg shadow-xl p-8 max-w-4xl w-full text-center border border-purple-200">
         <h2 className="text-4xl font-bold text-purple-600 mb-8">
-          Questions & Answers Management
+          Question & Answer Management ({questions.length} Total)
         </h2>
-        <div className="overflow-x-auto rounded-lg shadow-md">
-          <table className="min-w-full bg-white">
-            <thead className="bg-purple-100 border-b border-purple-200">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-purple-700 uppercase tracking-wider">
-                  ID
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-purple-700 uppercase tracking-wider">
-                  Question
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-purple-700 uppercase tracking-wider">
-                  Student
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-purple-700 uppercase tracking-wider">
-                  Teacher
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-purple-700 uppercase tracking-wider">
-                  Status
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {qa.map((item) => (
-                <tr key={item.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                    {item.id}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                    {item.question}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                    {item.student}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                    {item.teacher}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <span
-                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        item.status === "Solved"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-yellow-100 text-yellow-800"
-                      }`}
-                    >
-                      {item.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <div className="bg-yellow-50 p-4 rounded-lg shadow-sm">
+            <p className="text-lg font-semibold text-yellow-700">Pending</p>
+            <p className="text-2xl font-bold text-yellow-800">{pendingCount}</p>
+          </div>
+          <div className="bg-green-50 p-4 rounded-lg shadow-sm">
+            <p className="text-lg font-semibold text-green-700">Solved</p>
+            <p className="text-2xl font-bold text-green-800">{solvedCount}</p>
+          </div>
+          <div className="bg-orange-50 p-4 rounded-lg shadow-sm">
+            <p className="text-lg font-semibold text-orange-700">
+              Follow-up Pending
+            </p>
+            <p className="text-2xl font-bold text-orange-800">
+              {followUpPendingCount}
+            </p>
+          </div>
+          <div className="bg-blue-50 p-4 rounded-lg shadow-sm">
+            <p className="text-lg font-semibold text-blue-700">
+              Follow-up Solved
+            </p>
+            <p className="text-2xl font-bold text-blue-800">
+              {followUpSolvedCount}
+            </p>
+          </div>
         </div>
+        {questions.length === 0 ? (
+          <p className="text-lg text-gray-700">No questions asked yet.</p>
+        ) : (
+          <div className="overflow-x-auto rounded-lg shadow-md">
+            <table className="min-w-full bg-white">
+              <thead className="bg-purple-100 border-b border-purple-200">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-purple-700 uppercase tracking-wider">
+                    Question
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-purple-700 uppercase tracking-wider">
+                    Student Email
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-purple-700 uppercase tracking-wider">
+                    Teacher Email
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-purple-700 uppercase tracking-wider">
+                    Status
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {questions.map((item) => (
+                  <tr key={item.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                      {item.description.substring(0, 50)}...
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                      {item.studentEmail}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                      {item.solvedByTeacher || "N/A"}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      <span
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                          item.status === "solved" ||
+                          item.status === "follow-up-solved"
+                            ? "bg-green-100 text-green-800"
+                            : "bg-yellow-100 text-yellow-800"
+                        }`}
+                      >
+                        {item.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
         <div className="flex justify-center mt-8">
           <button
             onClick={() => setCurrentPage("admin-dashboard")}
@@ -1509,100 +1742,88 @@ const QuestionsAnswersManagement = ({ setCurrentPage }) => {
 };
 
 // MoneyFlowManagement Component - Admin view for money flow
-const MoneyFlowManagement = ({ setCurrentPage }) => {
-  const transactions = [
-    {
-      id: 1,
-      type: "Enrollment",
-      amount: 2000,
-      date: "2025-07-20",
-      status: "Completed",
-    },
-    {
-      id: 2,
-      type: "Teacher Payment",
-      amount: -500,
-      date: "2025-07-21",
-      status: "Completed",
-    },
-    {
-      id: 3,
-      type: "Enrollment",
-      amount: 1000,
-      date: "2025-07-22",
-      status: "Pending",
-    },
-    {
-      id: 4,
-      type: "Refund",
-      amount: -200,
-      date: "2025-07-23",
-      status: "Completed",
-    },
-  ];
+const MoneyFlowManagement = ({ setCurrentPage, availableCourses }) => {
+  const [enrollments, setEnrollments] = useState([]);
+  const [totalRevenue, setTotalRevenue] = useState(0);
+
+  useEffect(() => {
+    const storedEnrollments =
+      JSON.parse(localStorage.getItem("enrolledCourses")) || [];
+    setEnrollments(storedEnrollments);
+
+    const revenue = storedEnrollments.reduce((sum, enrollment) => {
+      // Find the price from the availableCourses prop
+      const coursePrice =
+        availableCourses.find((c) => c.courseName === enrollment.courseName)
+          ?.priceText || "0 BDT";
+      const priceValue = parseInt(coursePrice.replace(" BDT", "")) || 0;
+      return sum + priceValue;
+    }, 0);
+    setTotalRevenue(revenue);
+  }, [availableCourses]); // Depend on availableCourses to re-calculate if courses change
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-8">
       <div className="bg-white rounded-lg shadow-xl p-8 max-w-4xl w-full text-center border border-red-200">
-        <h2 className="text-4xl font-bold text-red-600 mb-8">
-          Money Flow Management
-        </h2>
-        <div className="overflow-x-auto rounded-lg shadow-md">
-          <table className="min-w-full bg-white">
-            <thead className="bg-red-100 border-b border-red-200">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-red-700 uppercase tracking-wider">
-                  ID
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-red-700 uppercase tracking-wider">
-                  Type
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-red-700 uppercase tracking-wider">
-                  Amount (BDT)
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-red-700 uppercase tracking-wider">
-                  Date
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-red-700 uppercase tracking-wider">
-                  Status
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {transactions.map((transaction) => (
-                <tr key={transaction.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                    {transaction.id}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                    {transaction.type}
-                  </td>
-                  <td
-                    className={`px-6 py-4 whitespace-nowrap text-sm ${
-                      transaction.amount > 0 ? "text-green-600" : "text-red-600"
-                    }`}
-                  >
-                    {transaction.amount}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                    {transaction.date}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <span
-                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        transaction.status === "Completed"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-yellow-100 text-yellow-800"
-                      }`}
-                    >
-                      {transaction.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="mb-8 p-4 bg-red-50 rounded-lg shadow-sm">
+          <p className="text-lg font-semibold text-red-700">Total Revenue</p>
+          <p className="text-3xl font-bold text-red-800">{totalRevenue} BDT</p>
         </div>
+        {enrollments.length === 0 ? (
+          <p className="text-lg text-gray-700">No transactions recorded yet.</p>
+        ) : (
+          <div className="overflow-x-auto rounded-lg shadow-md">
+            <table className="min-w-full bg-white">
+              <thead className="bg-red-100 border-b border-red-200">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-red-700 uppercase tracking-wider">
+                    Course
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-red-700 uppercase tracking-wider">
+                    Student Email
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-red-700 uppercase tracking-wider">
+                    Amount (BDT)
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-red-700 uppercase tracking-wider">
+                    Payment Method
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-red-700 uppercase tracking-wider">
+                    Transaction ID
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {enrollments.map((enrollment, index) => {
+                  const coursePrice =
+                    availableCourses.find(
+                      (c) => c.courseName === enrollment.courseName
+                    )?.priceText || "0 BDT";
+                  const priceValue = parseInt(coursePrice.replace(" BDT", ""));
+                  return (
+                    <tr key={index} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                        {enrollment.courseName}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                        {enrollment.studentEmail}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">
+                        {priceValue}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                        {enrollment.paymentMethod}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                        {enrollment.transactionId}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
         <div className="flex justify-center mt-8">
           <button
             onClick={() => setCurrentPage("admin-dashboard")}
@@ -1617,7 +1838,52 @@ const MoneyFlowManagement = ({ setCurrentPage }) => {
 };
 
 // AdminDashboard Component - Main dashboard for admin
-const AdminDashboard = ({ setCurrentPage }) => {
+const AdminDashboard = ({ setCurrentPage, availableCourses }) => {
+  const [studentCount, setStudentCount] = useState(0);
+  const [teacherCount, setTeacherCount] = useState(0);
+  const [courseCount, setCourseCount] = useState(0);
+  const [pendingQuestionsCount, setPendingQuestionsCount] = useState(0);
+  const [totalRevenue, setTotalRevenue] = useState(0);
+
+  useEffect(() => {
+    // Fetch student count
+    const students =
+      JSON.parse(localStorage.getItem("doubtDeskStudents")) || [];
+    setStudentCount(students.length);
+
+    // Fetch teacher count (only active teachers)
+    const teachers =
+      JSON.parse(localStorage.getItem("doubtDeskTeachers")) || [];
+    const activeTeachers = teachers.filter(
+      (teacher) => teacher.isActive !== false
+    ); // Default to active if property is missing
+    setTeacherCount(activeTeachers.length);
+
+    // Fetch course count (unique enrolled courses)
+    // Now using availableCourses from props, which is the main course list
+    setCourseCount(availableCourses.length);
+
+    // Fetch pending questions count
+    const questions =
+      JSON.parse(localStorage.getItem("doubtDeskQuestions")) || [];
+    const pending = questions.filter(
+      (q) => q.status === "pending" || q.status === "follow-up-pending"
+    );
+    setPendingQuestionsCount(pending.length);
+
+    // Calculate total revenue
+    const enrolledCourses =
+      JSON.parse(localStorage.getItem("enrolledCourses")) || [];
+    const revenue = enrolledCourses.reduce((sum, enrollment) => {
+      const coursePrice =
+        availableCourses.find((c) => c.courseName === enrollment.courseName)
+          ?.priceText || "0 BDT";
+      const priceValue = parseInt(coursePrice.replace(" BDT", "")) || 0;
+      return sum + priceValue;
+    }, 0);
+    setTotalRevenue(revenue);
+  }, [availableCourses]); // Depend on availableCourses to re-calculate if courses change
+
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-8">
       <div className="bg-white rounded-lg shadow-xl p-8 max-w-6xl w-full text-center border border-red-200">
@@ -1628,7 +1894,7 @@ const AdminDashboard = ({ setCurrentPage }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="bg-blue-50 p-6 rounded-lg shadow-md">
             <h3 className="text-2xl font-semibold text-blue-700 mb-3">
-              Students
+              Students ({studentCount})
             </h3>
             <p className="text-gray-600">Manage student accounts and data.</p>
             <button
@@ -1641,7 +1907,7 @@ const AdminDashboard = ({ setCurrentPage }) => {
 
           <div className="bg-green-50 p-6 rounded-lg shadow-md">
             <h3 className="text-2xl font-semibold text-green-700 mb-3">
-              Teachers
+              Teachers ({teacherCount})
             </h3>
             <p className="text-gray-600">
               Manage teacher accounts and assignments.
@@ -1656,7 +1922,7 @@ const AdminDashboard = ({ setCurrentPage }) => {
 
           <div className="bg-yellow-50 p-6 rounded-lg shadow-md">
             <h3 className="text-2xl font-semibold text-yellow-700 mb-3">
-              Courses
+              Courses ({courseCount})
             </h3>
             <p className="text-gray-600">
               Manage course offerings and content.
@@ -1671,7 +1937,7 @@ const AdminDashboard = ({ setCurrentPage }) => {
 
           <div className="bg-purple-50 p-6 rounded-lg shadow-md">
             <h3 className="text-2xl font-semibold text-purple-700 mb-3">
-              Questions & Answers
+              Questions & Answers ({pendingQuestionsCount} Pending)
             </h3>
             <p className="text-gray-600">
               Monitor and review all questions and solutions.
@@ -1686,7 +1952,7 @@ const AdminDashboard = ({ setCurrentPage }) => {
 
           <div className="bg-red-50 p-6 rounded-lg shadow-md">
             <h3 className="text-2xl font-semibold text-red-700 mb-3">
-              Money Flow
+              Money Flow ({totalRevenue} BDT)
             </h3>
             <p className="text-gray-600">
               Track financial transactions and revenue.
@@ -1718,8 +1984,21 @@ const AskDoubtForm = ({
   selectedCourse,
   selectedSubject,
   loggedInUser,
+  isFollowUp = false, // New prop to indicate if it's a follow-up
+  originalQuestion = null, // Original question object for follow-ups
+  addNotification, // Passed from App
+  preselectedCourseName = null, // New prop for pre-selecting course
+  preselectedSubjectName = null, // New prop for pre-selecting subject
 }) => {
   const [doubtDescription, setDoubtDescription] = useState("");
+  const [localSelectedCourse, setLocalSelectedCourse] = useState(
+    preselectedCourseName || selectedCourse || ""
+  );
+  const [localSelectedSubject, setLocalSelectedSubject] = useState(
+    preselectedSubjectName || selectedSubject || ""
+  );
+  const [subjectsForCourse, setSubjectsForCourse] = useState([]);
+
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedVoice, setSelectedVoice] = useState(null);
   const [selectedVideo, setSelectedVideo] = useState(null);
@@ -1731,6 +2010,14 @@ const AskDoubtForm = ({
   const voiceInputRef = useRef(null);
   const videoInputRef = useRef(null);
   const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    if (localSelectedCourse) {
+      setSubjectsForCourse(courseSubjectsData[localSelectedCourse] || []);
+    } else {
+      setSubjectsForCourse([]);
+    }
+  }, [localSelectedCourse]);
 
   const handleDescriptionChange = (e) => {
     setDoubtDescription(e.target.value);
@@ -1764,7 +2051,17 @@ const AskDoubtForm = ({
   const handlePostDoubt = (e) => {
     e.preventDefault();
     if (!doubtDescription.trim()) {
-      setError("Please enter your doubt description.");
+      setError("Please write your doubt description.");
+      setIsPosted(false);
+      return;
+    }
+    if (!localSelectedCourse) {
+      setError("Please select a course.");
+      setIsPosted(false);
+      return;
+    }
+    if (!localSelectedSubject) {
+      setError("Please select a subject.");
       setIsPosted(false);
       return;
     }
@@ -1774,13 +2071,13 @@ const AskDoubtForm = ({
     const newQuestion = {
       id: Date.now(),
       studentEmail: loggedInUser.email, // Tag question with student's email
-      course: selectedCourse,
-      subject: selectedSubject,
+      course: localSelectedCourse,
+      subject: localSelectedSubject,
       description: doubtDescription,
       timestamp: new Date().toLocaleString(),
-      status: "pending",
+      status: isFollowUp ? "follow-up-pending" : "pending", // Set status based on isFollowUp
       solution: "",
-      solvedByTeacher: null, // To store which teacher solved it
+      solvedByTeacher: isFollowUp ? originalQuestion.solvedByTeacher : null, // Assign to original solver
       attachments: {
         image: selectedImage ? selectedImage.name : null,
         voice: selectedVoice ? selectedVoice.name : null,
@@ -1793,6 +2090,7 @@ const AskDoubtForm = ({
         video: null,
         file: null,
       },
+      originalQuestionId: isFollowUp ? originalQuestion.id : null, // Link to original question
     };
     const updatedQuestions = [newQuestion, ...existingQuestions];
 
@@ -1810,23 +2108,52 @@ const AskDoubtForm = ({
     setSelectedVideo(null);
     setSelectedFile(null);
 
+    // Send notification to the teacher if it's a follow-up
+    if (isFollowUp && originalQuestion.solvedByTeacher) {
+      addNotification(
+        originalQuestion.solvedByTeacher, // Recipient is the teacher
+        newQuestion.id, // Notification links to the new follow-up question
+        `Student "${
+          loggedInUser.email
+        }" asked a follow-up question on your solved question: "${newQuestion.description.substring(
+          0,
+          30
+        )}..."`
+      );
+    }
+
     setTimeout(() => {
-      setCurrentPage("student-dashboard");
+      // If it's a follow-up, go back to question history. Otherwise, student dashboard.
+      if (isFollowUp) {
+        setCurrentPage("question-history");
+      } else {
+        setCurrentPage("student-dashboard");
+      }
     }, 1500);
   };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-8">
       <div className="bg-white rounded-lg shadow-xl p-8 max-w-2xl w-full text-center border border-yellow-200">
-        <h2 className="text-4xl font-bold text-yellow-600 mb-6">Ask a Doubt</h2>
-        {selectedCourse && selectedSubject && (
-          <p className="text-lg text-gray-700 mb-4">
-            Course: <span className="font-semibold">{selectedCourse}</span> |
-            Subject: <span className="font-semibold">{selectedSubject}</span>
-          </p>
+        <h2 className="text-4xl font-bold text-yellow-600 mb-6">
+          {isFollowUp ? "Ask a Follow-up Question" : "Ask a Doubt"}
+        </h2>
+        {isFollowUp && originalQuestion && (
+          <div className="mb-4 p-4 bg-gray-50 rounded-md border border-gray-200 text-left">
+            <p className="text-gray-800 font-semibold mb-1">
+              Original Question:
+            </p>
+            <p className="text-gray-700 text-base">
+              {originalQuestion.description}
+            </p>
+            <p className="text-gray-500 text-xs mt-1">
+              Solved by: {originalQuestion.solvedByTeacher}
+            </p>
+          </div>
         )}
+
         <p className="text-lg text-gray-700 mb-8">
-          Type your question below and our expert teachers will help you out!
+          Type your question below and our expert teachers will help you!
         </p>
         {isPosted && (
           <div
@@ -1842,6 +2169,84 @@ const AskDoubtForm = ({
         <form onSubmit={handlePostDoubt} className="space-y-6">
           <div>
             <label
+              htmlFor="selectCourse"
+              className="block text-gray-700 text-sm font-bold mb-2 text-left"
+            >
+              Select Course:
+            </label>
+            <select
+              id="selectCourse"
+              value={localSelectedCourse}
+              onChange={(e) => {
+                setLocalSelectedCourse(e.target.value);
+                setError("");
+              }}
+              disabled={!!preselectedCourseName || !!selectedCourse} // Disable if preselected or already selected
+              className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition duration-200 ${
+                error && !localSelectedCourse
+                  ? "border-red-500"
+                  : "border-gray-300"
+              }`}
+            >
+              <option value="">-- Select a Course --</option>
+              {loggedInUser &&
+                JSON.parse(localStorage.getItem("enrolledCourses"))
+                  ?.filter(
+                    (enrollment) =>
+                      enrollment.studentEmail === loggedInUser.email
+                  )
+                  .map((enrollment, index) => (
+                    <option key={index} value={enrollment.courseName}>
+                      {enrollment.courseName}
+                    </option>
+                  ))}
+            </select>
+            {error && !localSelectedCourse && (
+              <p className="text-red-500 text-xs italic mt-1 text-left">
+                {error}
+              </p>
+            )}
+          </div>
+
+          {localSelectedCourse && (
+            <div>
+              <label
+                htmlFor="selectSubject"
+                className="block text-gray-700 text-sm font-bold mb-2 text-left"
+              >
+                Select Subject:
+              </label>
+              <select
+                id="selectSubject"
+                value={localSelectedSubject}
+                onChange={(e) => {
+                  setLocalSelectedSubject(e.target.value);
+                  setError("");
+                }}
+                disabled={!!preselectedSubjectName} // Disable if preselected
+                className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition duration-200 ${
+                  error && !localSelectedSubject
+                    ? "border-red-500"
+                    : "border-gray-300"
+                }`}
+              >
+                <option value="">-- Select a Subject --</option>
+                {subjectsForCourse.map((subject, index) => (
+                  <option key={index} value={subject}>
+                    {subject}
+                  </option>
+                ))}
+              </select>
+              {error && !localSelectedSubject && (
+                <p className="text-red-500 text-xs italic mt-1 text-left">
+                  {error}
+                </p>
+              )}
+            </div>
+          )}
+
+          <div>
+            <label
               htmlFor="doubtDescription"
               className="block text-gray-700 text-sm font-bold mb-2 text-left"
             >
@@ -1855,10 +2260,12 @@ const AskDoubtForm = ({
               rows="8"
               placeholder="Describe your question in detail..."
               className={`shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition duration-200 resize-y ${
-                error ? "border-red-500" : "border-gray-300"
+                error && !doubtDescription.trim()
+                  ? "border-red-500"
+                  : "border-gray-300"
               }`}
             ></textarea>
-            {error && (
+            {error && doubtDescription.trim() === "" && (
               <p className="text-red-500 text-xs italic mt-1 text-left">
                 {error}
               </p>
@@ -2025,7 +2432,7 @@ const AskDoubtForm = ({
               type="submit"
               className="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition-all duration-300 transform hover:scale-105 shadow-md"
             >
-              Post Question
+              {isFollowUp ? "Post Follow-up Question" : "Post Question"}
             </button>
             <button
               type="button"
@@ -2041,36 +2448,159 @@ const AskDoubtForm = ({
   );
 };
 
+// FollowUpQuestionForm Modal
+const FollowUpQuestionForm = ({
+  originalQuestion,
+  loggedInUser,
+  onClose,
+  addNotification,
+  setCurrentPage,
+}) => {
+  return (
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <AskDoubtForm
+        setCurrentPage={setCurrentPage}
+        preselectedCourseName={originalQuestion.course} // Pre-select course for follow-up
+        preselectedSubjectName={originalQuestion.subject} // Pre-select subject for follow-up
+        loggedInUser={loggedInUser}
+        isFollowUp={true}
+        originalQuestion={originalQuestion}
+        addNotification={addNotification}
+      />
+      {/* A simple close button for the modal, as AskDoubtForm handles its own submission/cancellation */}
+      <button
+        onClick={onClose}
+        className="absolute top-4 right-4 bg-white text-gray-700 p-2 rounded-full shadow-lg hover:bg-gray-100"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+    </div>
+  );
+};
+
 // QuestionHistoryPage Component - Displays a student's question history
-const QuestionHistoryPage = ({ setCurrentPage, loggedInUser }) => {
+const QuestionHistoryPage = ({
+  setCurrentPage,
+  loggedInUser,
+  highlightQuestionId,
+  setHighlightQuestionId,
+  addNotification, // Pass addNotification
+  filterByCourseName = null, // New prop to filter questions by course
+}) => {
   const [questions, setQuestions] = useState([]);
+  const [showFollowUpForm, setShowFollowUpForm] = useState(false);
+  const [selectedOriginalQuestion, setSelectedOriginalQuestion] =
+    useState(null);
+  const questionRefs = useRef({});
 
   useEffect(() => {
     const storedQuestions =
       JSON.parse(localStorage.getItem("doubtDeskQuestions")) || [];
     // Filter questions by the logged-in student's email
-    const studentQuestions = storedQuestions.filter(
+    let studentQuestions = storedQuestions.filter(
       (q) => q.studentEmail === loggedInUser.email
     );
-    setQuestions(studentQuestions);
-  }, [loggedInUser]);
+
+    // Apply course filter if provided
+    if (filterByCourseName) {
+      studentQuestions = studentQuestions.filter(
+        (q) => q.course === filterByCourseName
+      );
+    }
+
+    // Separate root questions and their follow-ups for display
+    const rootQuestions = studentQuestions.filter((q) => !q.originalQuestionId);
+    const followUpQuestions = studentQuestions.filter(
+      (q) => q.originalQuestionId
+    );
+
+    const questionsWithFollowUps = rootQuestions.map((q) => ({
+      ...q,
+      followUps: followUpQuestions
+        .filter((fu) => fu.originalQuestionId === q.id)
+        .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)), // Sort follow-ups by time
+    }));
+
+    setQuestions(questionsWithFollowUps);
+  }, [loggedInUser, showFollowUpForm, filterByCourseName]); // Re-fetch when follow-up form is closed or course filter changes
+
+  useEffect(() => {
+    if (highlightQuestionId && questionRefs.current[highlightQuestionId]) {
+      questionRefs.current[highlightQuestionId].scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      // Optionally, remove highlight after a few seconds
+      const timer = setTimeout(() => {
+        setHighlightQuestionId(null);
+      }, 3000); // Remove highlight after 3 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [highlightQuestionId]);
+
+  const handleMarkSatisfied = (questionId) => {
+    const storedQuestions =
+      JSON.parse(localStorage.getItem("doubtDeskQuestions")) || [];
+    const updatedQuestions = storedQuestions.map((q) =>
+      q.id === questionId ? { ...q, status: "satisfied" } : q
+    );
+    localStorage.setItem(
+      "doubtDeskQuestions",
+      JSON.stringify(updatedQuestions)
+    );
+    setQuestions((prev) =>
+      prev.map((q) => (q.id === questionId ? { ...q, status: "satisfied" } : q))
+    );
+  };
+
+  const handleAskFollowUp = (question) => {
+    setSelectedOriginalQuestion(question);
+    setShowFollowUpForm(true);
+  };
+
+  const handleCloseFollowUpForm = () => {
+    setShowFollowUpForm(false);
+    setSelectedOriginalQuestion(null);
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-8">
       <div className="bg-white rounded-lg shadow-xl p-8 max-w-3xl w-full border border-purple-200">
         <h2 className="text-4xl font-bold text-purple-600 mb-6 text-center">
-          Your Question History
+          {filterByCourseName
+            ? `${filterByCourseName} Questions`
+            : "Your Question History"}
         </h2>
         {questions.length === 0 ? (
           <p className="text-lg text-gray-700 text-center">
-            You haven't asked any questions yet.
+            {filterByCourseName
+              ? `You haven't asked any questions for ${filterByCourseName} yet.`
+              : "You haven't asked any questions yet."}
           </p>
         ) : (
           <div className="space-y-4">
             {questions.map((question) => (
               <div
                 key={question.id}
-                className="bg-purple-50 p-4 rounded-lg shadow-sm border border-purple-100 text-left"
+                ref={(el) => (questionRefs.current[question.id] = el)}
+                className={`bg-purple-50 p-4 rounded-lg shadow-sm border border-purple-100 text-left transition-all duration-500 ${
+                  highlightQuestionId === question.id
+                    ? "ring-4 ring-yellow-500 ring-opacity-75"
+                    : ""
+                }`}
               >
                 {question.course && question.subject && (
                   <p className="text-gray-800 font-semibold mb-1">
@@ -2132,14 +2662,125 @@ const QuestionHistoryPage = ({ setCurrentPage, loggedInUser }) => {
                         Solved by: {question.solvedByTeacher}
                       </p>
                     )}
+                    <div className="flex space-x-2 mt-3 justify-end">
+                      {question.status !== "satisfied" && (
+                        <button
+                          onClick={() => handleMarkSatisfied(question.id)}
+                          className="bg-green-500 hover:bg-green-600 text-white text-sm px-3 py-1 rounded-md transition-colors duration-200"
+                        >
+                          Mark as Satisfied
+                        </button>
+                      )}
+                      <button
+                        onClick={() => handleAskFollowUp(question)}
+                        className="bg-blue-500 hover:bg-blue-600 text-white text-sm px-3 py-1 rounded-md transition-colors duration-200"
+                      >
+                        Ask Follow-up
+                      </button>
+                    </div>
+                  </div>
+                )}
+                {question.followUps && question.followUps.length > 0 && (
+                  <div className="mt-4 border-t border-gray-200 pt-4 space-y-3">
+                    <h4 className="text-md font-bold text-gray-800">
+                      Follow-up Questions:
+                    </h4>
+                    {question.followUps.map((fu) => (
+                      <div
+                        key={fu.id}
+                        className={`bg-gray-100 p-3 rounded-md border border-gray-200 text-left ${
+                          highlightQuestionId === fu.id
+                            ? "ring-4 ring-blue-500 ring-opacity-75"
+                            : ""
+                        }`}
+                        ref={(el) => (questionRefs.current[fu.id] = el)}
+                      >
+                        <p className="text-gray-700 text-sm">
+                          <span className="font-semibold">Follow-up:</span>{" "}
+                          {fu.description}
+                        </p>
+                        {fu.attachments && (
+                          <div className="text-xs text-gray-600 mt-1">
+                            {fu.attachments.image && (
+                              <p>Image: {fu.attachments.image}</p>
+                            )}
+                            {fu.attachments.voice && (
+                              <p>Voice: {fu.attachments.voice}</p>
+                            )}
+                            {fu.attachments.video && (
+                              <p>Video: {fu.attachments.video}</p>
+                            )}
+                            {fu.attachments.file && (
+                              <p>File: {fu.attachments.file}</p>
+                            )}
+                          </div>
+                        )}
+                        {fu.status === "follow-up-solved" && fu.solution && (
+                          <div className="mt-2 p-2 bg-gray-200 rounded-md">
+                            <p className="text-gray-800 text-sm font-semibold">
+                              Follow-up Solution:
+                            </p>
+                            <p className="text-gray-700 text-xs">
+                              {fu.solution}
+                            </p>
+                            {fu.solutionAttachments && (
+                              <div className="text-xs text-gray-600 mt-1">
+                                {fu.solutionAttachments.image && (
+                                  <p>
+                                    Solution Image:{" "}
+                                    {fu.solutionAttachments.image}
+                                  </p>
+                                )}
+                                {fu.solutionAttachments.voice && (
+                                  <p>
+                                    Solution Voice:{" "}
+                                    {fu.solutionAttachments.voice}
+                                  </p>
+                                )}
+                                {fu.solutionAttachments.video && (
+                                  <p>
+                                    Solution Video:{" "}
+                                    {fu.solutionAttachments.video}
+                                  </p>
+                                )}
+                                {fu.solutionAttachments.file && (
+                                  <p>
+                                    Solution File: {fu.solutionAttachments.file}
+                                  </p>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                        <p className="text-xs text-gray-500 mt-1">
+                          Status:{" "}
+                          <span
+                            className={`font-semibold ${
+                              fu.status === "follow-up-pending"
+                                ? "text-yellow-600"
+                                : "text-green-600"
+                            }`}
+                          >
+                            {fu.status
+                              .replace("follow-up-", "")
+                              .charAt(0)
+                              .toUpperCase() +
+                              fu.status.replace("follow-up-", "").slice(1)}
+                          </span>{" "}
+                          | Asked: {fu.timestamp}
+                        </p>
+                      </div>
+                    ))}
                   </div>
                 )}
                 <p className="text-sm text-gray-500 mt-2">
-                  Asked on: {question.timestamp} | Status:{" "}
+                  Asked: {question.timestamp} | Status:{" "}
                   <span
                     className={`font-semibold ${
                       question.status === "pending"
                         ? "text-yellow-600"
+                        : question.status === "solved"
+                        ? "text-blue-600"
                         : "text-green-600"
                     }`}
                   >
@@ -2160,6 +2801,15 @@ const QuestionHistoryPage = ({ setCurrentPage, loggedInUser }) => {
           </button>
         </div>
       </div>
+      {showFollowUpForm && (
+        <FollowUpQuestionForm
+          originalQuestion={selectedOriginalQuestion}
+          loggedInUser={loggedInUser}
+          onClose={handleCloseFollowUpForm}
+          addNotification={addNotification}
+          setCurrentPage={setCurrentPage}
+        />
+      )}
     </div>
   );
 };
@@ -2171,8 +2821,8 @@ const courseSubjectsData = {
     "Physics 2nd Paper",
     "Chemistry 1st Paper",
     "Chemistry 2nd Paper",
-    "Math 1st Paper",
-    "Math 2nd Paper",
+    "Mathematics 1st Paper",
+    "Mathematics 2nd Paper",
     "Biology 1st Paper",
     "Biology 2nd Paper",
   ],
@@ -2180,8 +2830,8 @@ const courseSubjectsData = {
     "Physics",
     "Chemistry",
     "Biology",
-    "Higher Math",
-    "General Math",
+    "Higher Mathematics",
+    "General Mathematics",
     "Bangla 1st Paper",
     "Bangla 2nd Paper",
     "English 1st Paper",
@@ -2192,22 +2842,40 @@ const courseSubjectsData = {
     "Physics 1st Paper",
     "Chemistry 1st Paper",
     "Biology 1st Paper",
-    "Math 1st Paper",
+    "Mathematics 1st Paper",
     "Bangla 1st Paper",
     "English 1st Paper",
     "ICT",
   ],
 };
 
-const CourseSubjectsPage = ({ courseName, setCurrentPage }) => {
+// CourseDetailsPage Component - Displays course subjects and options to ask doubt/view history
+const CourseDetailsPage = ({
+  courseName,
+  setCurrentPage,
+  loggedInUser,
+  addNotification,
+  setHighlightQuestionId,
+}) => {
   const subjects = courseSubjectsData[courseName] || [];
+
+  const handleAskDoubtClick = () => {
+    // Navigate to AskDoubtForm, pre-filling the course name
+    setCurrentPage("ask-doubt-for-course");
+  };
+
+  const handleViewQuestionsClick = () => {
+    // Navigate to QuestionHistoryPage, filtering by this course
+    setCurrentPage("question-history-for-course");
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-8">
       <div className="bg-white rounded-lg shadow-xl p-8 max-w-2xl w-full text-center border border-blue-200">
         <h2 className="text-4xl font-bold text-blue-600 mb-6">
-          {courseName} Subjects
+          {courseName} Details
         </h2>
+        {/* <h3 className="text-2xl font-bold text-gray-800 mb-4">Subjects:</h3>
         {subjects.length === 0 ? (
           <p className="text-lg text-gray-700">
             No subjects found for this course.
@@ -2218,7 +2886,23 @@ const CourseSubjectsPage = ({ courseName, setCurrentPage }) => {
               <li key={index}>{subject}</li>
             ))}
           </ul>
-        )}
+        )} */}
+
+        <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
+          <button
+            onClick={handleAskDoubtClick}
+            className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition-all duration-300 transform hover:scale-105 shadow-md"
+          >
+            Ask a Doubt for this Course
+          </button>
+          <button
+            onClick={handleViewQuestionsClick}
+            className="bg-green-700 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition-all duration-300 transform hover:scale-105 shadow-md"
+          >
+            View Questions for this Course
+          </button>
+        </div>
+
         <div className="mt-8">
           <button
             onClick={() => setCurrentPage("student-dashboard")}
@@ -2236,7 +2920,6 @@ const CourseSubjectsPage = ({ courseName, setCurrentPage }) => {
 const StudentDashboard = ({
   setCurrentPage,
   setSelectedCourseForSubjects,
-  setDoubtDetails,
   loggedInUser,
   setIsCoursesOnlyView, // Receive the setter
 }) => {
@@ -2253,33 +2936,22 @@ const StudentDashboard = ({
   }, [loggedInUser]);
 
   const handleGoToCourse = (courseName) => {
-    setSelectedCourseForSubjects(courseName);
-    setCurrentPage("course-subjects");
-  };
-
-  const handleAskDoubtClick = () => {
-    setCurrentPage("select-doubt-details");
+    setSelectedCourseForSubjects(courseName); // This will now be used by CourseDetailsPage
+    setCurrentPage("course-details"); // Navigate to the new CourseDetailsPage
   };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-8">
       <div className="bg-white rounded-lg shadow-xl p-8 max-w-4xl w-full text-center border border-indigo-200">
-        <h2 className="text-4xl font-bold text-indigo-600 mb-6">
-          Welcome to Student Dashboard!
-        </h2>
-        <p className="text-lg text-gray-700 mb-8">
-          Here you can manage your courses, view your progress, and interact
-          with teachers.
-        </p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          <div className="bg-indigo-50 p-6 rounded-lg shadow-md">
+          <div className="bg-indigo-50 p-6 rounded-lg shadow-md col-span-full md:col-span-2 lg:col-span-3">
             <h3 className="text-2xl font-semibold text-indigo-700 mb-3">
-              My Courses
+              Enrolled Courses
             </h3>
             {enrolledCourses.length === 0 ? (
               <>
                 <p className="text-gray-600">
-                  You are not enrolled in any courses yet.
+                  You haven't enrolled in any courses yet.
                 </p>
                 <button
                   onClick={() => {
@@ -2288,7 +2960,7 @@ const StudentDashboard = ({
                   }}
                   className="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md font-medium transition-colors duration-200 shadow-md"
                 >
-                  Purchase Course
+                  Buy Courses
                 </button>
               </>
             ) : (
@@ -2316,39 +2988,10 @@ const StudentDashboard = ({
                   }}
                   className="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md font-medium transition-colors duration-200 shadow-md"
                 >
-                  Purchase More Courses
+                  Buy More Courses
                 </button>
               </div>
             )}
-          </div>
-
-          <div className="bg-green-50 p-6 rounded-lg shadow-md">
-            <h3 className="text-2xl font-semibold text-green-700 mb-3">
-              Ask a Doubt
-            </h3>
-            <p className="text-gray-600">
-              Post your questions and get quick answers from expert teachers.
-            </p>
-            <button
-              onClick={handleAskDoubtClick}
-              className="mt-4 bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-md font-medium transition-colors duration-200 shadow-md"
-            >
-              Ask Now
-            </button>
-          </div>
-          <div className="bg-purple-50 p-6 rounded-lg shadow-md">
-            <h3 className="text-2xl font-semibold text-purple-700 mb-3">
-              Question History
-            </h3>
-            <p className="text-gray-600">
-              Review all your previously asked questions and their solutions.
-            </p>
-            <button
-              onClick={() => setCurrentPage("question-history")}
-              className="mt-4 bg-purple-500 hover:bg-purple-600 text-white px-5 py-2 rounded-md font-medium transition-colors duration-200 shadow-md"
-            >
-              Show
-            </button>
           </div>
         </div>
       </div>
@@ -2357,7 +3000,12 @@ const StudentDashboard = ({
 };
 
 // EnrollmentForm Component - Handles course enrollment
-const EnrollmentForm = ({ courseName, setCurrentPage, loggedInUser }) => {
+const EnrollmentForm = ({
+  courseName,
+  setCurrentPage,
+  loggedInUser,
+  availableCourses,
+}) => {
   const [formData, setFormData] = useState({
     email: loggedInUser ? loggedInUser.email : "", // Pre-fill email if logged in
     paymentMethod: "",
@@ -2421,6 +3069,7 @@ const EnrollmentForm = ({ courseName, setCurrentPage, loggedInUser }) => {
           studentEmail: loggedInUser.email,
           courseName: courseName,
           ...formData,
+          date: new Date().toISOString().split("T")[0], // Add current date
         },
       ];
       localStorage.setItem(
@@ -2438,7 +3087,7 @@ const EnrollmentForm = ({ courseName, setCurrentPage, loggedInUser }) => {
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-8">
       <div className="bg-white rounded-lg shadow-xl p-8 max-w-2xl w-full text-center border border-indigo-200">
         <h2 className="text-3xl font-bold text-gray-800 mb-6">
-          Enroll in: {courseName}
+          Enroll: {courseName}
         </h2>
         {isSubmitted && (
           <div
@@ -2568,140 +3217,14 @@ const EnrollmentForm = ({ courseName, setCurrentPage, loggedInUser }) => {
   );
 };
 
-// SelectCourseAndSubject Component - Allows students to select course and subject for doubt
-const SelectCourseAndSubject = ({
-  setCurrentPage,
-  setDoubtDetails,
-  loggedInUser,
-}) => {
-  const [enrolledCourses, setEnrolledCourses] = useState([]);
-  const [selectedCourse, setSelectedCourse] = useState("");
-  const [subjects, setSubjects] = useState([]);
-  const [selectedSubject, setSelectedSubject] = useState("");
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    // Filter enrolled courses by the logged-in student's email
-    const storedEnrolledCourses =
-      JSON.parse(localStorage.getItem("enrolledCourses")) || [];
-    const studentEnrolledCourses = storedEnrolledCourses
-      .filter((enrollment) => enrollment.studentEmail === loggedInUser.email)
-      .map((enrollment) => enrollment.courseName);
-    setEnrolledCourses(studentEnrolledCourses);
-  }, [loggedInUser]);
-
-  useEffect(() => {
-    if (selectedCourse) {
-      setSubjects(courseSubjectsData[selectedCourse] || []);
-      setSelectedSubject("");
-    } else {
-      setSubjects([]);
-      setSelectedSubject("");
-    }
-  }, [selectedCourse]);
-
-  const handleNext = () => {
-    if (!selectedCourse) {
-      setError("Please select a course.");
-      return;
-    }
-    if (!selectedSubject) {
-      setError("Please select a subject.");
-      return;
-    }
-    setError("");
-    setDoubtDetails({ course: selectedCourse, subject: selectedSubject });
-    setCurrentPage("ask-doubt");
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-8">
-      <div className="bg-white rounded-lg shadow-xl p-8 max-w-2xl w-full text-center border border-yellow-200">
-        <h2 className="text-3xl font-bold text-yellow-600 mb-6">
-          Select Course and Subject
-        </h2>
-        {enrolledCourses.length === 0 ? (
-          <p className="text-lg text-gray-700 mb-6">
-            You are not enrolled in any courses. Please enroll in a course
-            first.
-          </p>
-        ) : (
-          <div className="space-y-6">
-            <div>
-              <label
-                htmlFor="selectCourse"
-                className="block text-gray-700 text-sm font-bold mb-2 text-left"
-              >
-                Select Course:
-              </label>
-              <select
-                id="selectCourse"
-                value={selectedCourse}
-                onChange={(e) => setSelectedCourse(e.target.value)}
-                className="shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition duration-200"
-              >
-                <option value="">-- Select a Course --</option>
-                {enrolledCourses.map((course, index) => (
-                  <option key={index} value={course}>
-                    {course}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {selectedCourse && (
-              <div>
-                <label
-                  htmlFor="selectSubject"
-                  className="block text-gray-700 text-sm font-bold mb-2 text-left"
-                >
-                  Select Subject:
-                </label>
-                <select
-                  id="selectSubject"
-                  value={selectedSubject}
-                  onChange={(e) => setSelectedSubject(e.target.value)}
-                  className="shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition duration-200"
-                >
-                  <option value="">-- Select a Subject --</option>
-                  {subjects.map((subject, index) => (
-                    <option key={index} value={subject}>
-                      {subject}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-
-            {error && (
-              <p className="text-red-500 text-xs italic mt-1 text-left">
-                {error}
-              </p>
-            )}
-
-            <div className="flex items-center justify-center space-x-4">
-              <button
-                onClick={handleNext}
-                className="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition-all duration-300 transform hover:scale-105 shadow-md"
-              >
-                Next
-              </button>
-              <button
-                onClick={() => setCurrentPage("student-dashboard")}
-                className="bg-gray-400 hover:bg-gray-500 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition-all duration-300 transform hover:scale-105 shadow-md"
-              >
-                Back to Dashboard
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
 // SolutionForm Component - Allows teachers to provide solutions
-const SolutionForm = ({ question, onSolve, onCancel, loggedInUser }) => {
+const SolutionForm = ({
+  question,
+  onSolve,
+  onCancel,
+  loggedInUser,
+  addNotification,
+}) => {
   const [solutionText, setSolutionText] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedVoice, setSelectedVoice] = useState(null);
@@ -2752,6 +3275,26 @@ const SolutionForm = ({ question, onSolve, onCancel, loggedInUser }) => {
 
     setError("");
     onSolve(question.id, solutionText, solutionAttachments, loggedInUser.email); // Pass teacher's email
+
+    // Add notification for the student
+    const notificationMessage =
+      question.status === "follow-up-pending"
+        ? `Your follow-up question has been solved: "${question.description.substring(
+            0,
+            30
+          )}..."`
+        : `Your question "${question.description.substring(
+            0,
+            30
+          )}..." has been solved!`;
+
+    addNotification(
+      question.studentEmail,
+      question.originalQuestionId || question.id, // Link to original question if it's a follow-up
+      notificationMessage,
+      question.status === "follow-up-pending" ? "follow-up-student" : "solution" // Type of notification
+    );
+
     setSelectedImage(null);
     setSelectedVoice(null);
     setSelectedVideo(null);
@@ -2762,7 +3305,9 @@ const SolutionForm = ({ question, onSolve, onCancel, loggedInUser }) => {
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg shadow-xl p-8 max-w-xl w-full border border-green-200">
         <h3 className="text-2xl font-bold text-green-600 mb-4 text-center">
-          Solve Question
+          {question.status === "follow-up-pending"
+            ? "Solve Follow-up Question"
+            : "Solve Question"}
         </h3>
         <div className="mb-4 p-4 bg-gray-50 rounded-md border border-gray-200">
           <p className="text-gray-800 font-semibold mb-1">
@@ -2788,8 +3333,14 @@ const SolutionForm = ({ question, onSolve, onCancel, loggedInUser }) => {
             </div>
           )}
           <p className="text-gray-500 text-xs mt-1">
-            Asked on: {question.timestamp}
+            Asked by: {question.studentEmail} on: {question.timestamp}
           </p>
+          {question.originalQuestionId && (
+            <p className="text-gray-500 text-xs mt-1 font-semibold">
+              (This is a follow-up to original question ID:{" "}
+              {question.originalQuestionId})
+            </p>
+          )}
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -2996,9 +3547,16 @@ const SolutionForm = ({ question, onSolve, onCancel, loggedInUser }) => {
 };
 
 // PendingQuestionsDashboard Component - Displays pending questions for teachers
-const PendingQuestionsDashboard = ({ setCurrentPage, loggedInUser }) => {
+const PendingQuestionsDashboard = ({
+  setCurrentPage,
+  loggedInUser,
+  addNotification,
+  highlightQuestionId, // New prop for highlighting specific question
+  setHighlightQuestionId, // New prop for clearing highlight
+}) => {
   const [allQuestions, setAllQuestions] = useState([]);
   const [solvingQuestion, setSolvingQuestion] = useState(null);
+  const questionRefs = useRef({}); // For scrolling to highlighted question
 
   // Sample questions to populate if local storage is empty
   const sampleQuestions = [
@@ -3019,6 +3577,7 @@ const PendingQuestionsDashboard = ({ setCurrentPage, loggedInUser }) => {
         video: null,
         file: null,
       },
+      originalQuestionId: null,
     },
     {
       id: 2,
@@ -3042,6 +3601,7 @@ const PendingQuestionsDashboard = ({ setCurrentPage, loggedInUser }) => {
         video: null,
         file: null,
       },
+      originalQuestionId: null,
     },
     {
       id: 3,
@@ -3065,6 +3625,7 @@ const PendingQuestionsDashboard = ({ setCurrentPage, loggedInUser }) => {
         video: null,
         file: null,
       },
+      originalQuestionId: null,
     },
   ];
 
@@ -3082,6 +3643,20 @@ const PendingQuestionsDashboard = ({ setCurrentPage, loggedInUser }) => {
     }
   }, []);
 
+  useEffect(() => {
+    if (highlightQuestionId && questionRefs.current[highlightQuestionId]) {
+      questionRefs.current[highlightQuestionId].scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      // Clear highlight after a few seconds
+      const timer = setTimeout(() => {
+        setHighlightQuestionId(null);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [highlightQuestionId]);
+
   const handleSolveClick = (question) => {
     setSolvingQuestion(question);
   };
@@ -3096,7 +3671,8 @@ const PendingQuestionsDashboard = ({ setCurrentPage, loggedInUser }) => {
       q.id === questionId
         ? {
             ...q,
-            status: "solved",
+            status:
+              q.status === "follow-up-pending" ? "follow-up-solved" : "solved", // Update status correctly
             solution: solutionText,
             solutionAttachments: solutionAttachments,
             solvedByTeacher: solvedByTeacherEmail,
@@ -3115,7 +3691,12 @@ const PendingQuestionsDashboard = ({ setCurrentPage, loggedInUser }) => {
     setSolvingQuestion(null);
   };
 
-  const pendingQuestions = allQuestions.filter((q) => q.status === "pending");
+  const pendingQuestions = allQuestions.filter(
+    (q) =>
+      q.status === "pending" ||
+      (q.status === "follow-up-pending" &&
+        q.solvedByTeacher === loggedInUser.email) // Only show follow-ups assigned to this teacher
+  );
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-8">
@@ -3133,7 +3714,12 @@ const PendingQuestionsDashboard = ({ setCurrentPage, loggedInUser }) => {
             {pendingQuestions.map((question) => (
               <div
                 key={question.id}
-                className="bg-blue-100 p-4 rounded-lg shadow-sm border border-blue-200 flex flex-col md:flex-row justify-between items-start md:items-center"
+                ref={(el) => (questionRefs.current[question.id] = el)}
+                className={`bg-blue-100 p-4 rounded-lg shadow-sm border border-blue-200 flex flex-col md:flex-row justify-between items-start md:items-center ${
+                  highlightQuestionId === question.id
+                    ? "ring-4 ring-orange-500 ring-opacity-75"
+                    : ""
+                }`}
               >
                 <div className="text-left flex-grow mb-3 md:mb-0">
                   <p className="text-blue-800 font-semibold mb-1">
@@ -3161,6 +3747,12 @@ const PendingQuestionsDashboard = ({ setCurrentPage, loggedInUser }) => {
                   <p className="text-gray-500 text-xs mt-1">
                     Asked by: {question.studentEmail} on: {question.timestamp}
                   </p>
+                  {question.originalQuestionId && (
+                    <p className="text-orange-600 text-sm font-semibold mt-1">
+                      (Follow-up to original question ID:{" "}
+                      {question.originalQuestionId})
+                    </p>
+                  )}
                 </div>
                 <button
                   onClick={() => handleSolveClick(question)}
@@ -3180,6 +3772,7 @@ const PendingQuestionsDashboard = ({ setCurrentPage, loggedInUser }) => {
           onSolve={handleSolutionSubmit}
           onCancel={handleCancelSolve}
           loggedInUser={loggedInUser}
+          addNotification={addNotification} // Pass addNotification here
         />
       )}
     </div>
@@ -3196,7 +3789,9 @@ const SolvedQuestionsDashboard = ({ setCurrentPage, loggedInUser }) => {
       JSON.parse(localStorage.getItem("doubtDeskQuestions")) || [];
     // Filter solved questions by the logged-in teacher's email
     const filteredSolvedQuestions = storedQuestions.filter(
-      (q) => q.status === "solved" && q.solvedByTeacher === loggedInUser.email
+      (q) =>
+        (q.status === "solved" || q.status === "follow-up-solved") &&
+        q.solvedByTeacher === loggedInUser.email
     );
     setSolvedQuestions(filteredSolvedQuestions);
   }, [loggedInUser]);
@@ -3218,7 +3813,7 @@ const SolvedQuestionsDashboard = ({ setCurrentPage, loggedInUser }) => {
 
         {solvedQuestions.length === 0 ? (
           <p className="text-lg text-gray-700">
-            No questions have been solved by you yet.
+            No questions solved by you yet.
           </p>
         ) : (
           <div className="space-y-4 max-h-96 overflow-y-auto">
@@ -3253,6 +3848,12 @@ const SolvedQuestionsDashboard = ({ setCurrentPage, loggedInUser }) => {
                   <p className="text-gray-500 text-xs mt-1">
                     Asked by: {question.studentEmail} on: {question.timestamp}
                   </p>
+                  {question.originalQuestionId && (
+                    <p className="text-blue-600 text-sm font-semibold mt-1">
+                      (Follow-up to original question ID:{" "}
+                      {question.originalQuestionId})
+                    </p>
+                  )}
                 </div>
                 <button
                   onClick={() => handleViewSolutionClick(question)}
@@ -3270,7 +3871,7 @@ const SolvedQuestionsDashboard = ({ setCurrentPage, loggedInUser }) => {
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg shadow-xl p-8 max-w-xl w-full border border-purple-200">
             <h3 className="text-2xl font-bold text-purple-600 mb-4 text-center">
-              Solution for Question
+              Question Solution
             </h3>
             <div className="mb-4 p-4 bg-gray-50 rounded-md border border-gray-200">
               <p className="text-gray-800 font-semibold mb-1">
@@ -3300,6 +3901,12 @@ const SolvedQuestionsDashboard = ({ setCurrentPage, loggedInUser }) => {
                 Asked by: {viewingSolution.studentEmail} on:{" "}
                 {viewingSolution.timestamp}
               </p>
+              {viewingSolution.originalQuestionId && (
+                <p className="text-gray-500 text-xs mt-1 font-semibold">
+                  (Follow-up to original question ID:{" "}
+                  {viewingSolution.originalQuestionId})
+                </p>
+              )}
             </div>
             <div className="mb-6 p-4 bg-purple-100 rounded-md border border-purple-200">
               <p className="text-purple-800 font-semibold mb-1">Solution:</p>
@@ -3354,6 +3961,204 @@ const SolvedQuestionsDashboard = ({ setCurrentPage, loggedInUser }) => {
   );
 };
 
+// StudentProfilePage Component
+const StudentProfilePage = ({ setCurrentPage, loggedInUser }) => {
+  const [studentInfo, setStudentInfo] = useState(null);
+  const [enrolledCourses, setEnrolledCourses] = useState([]);
+
+  useEffect(() => {
+    if (loggedInUser && loggedInUser.role === "student") {
+      const students =
+        JSON.parse(localStorage.getItem("doubtDeskStudents")) || [];
+      const currentStudent = students.find(
+        (s) => s.email === loggedInUser.email
+      );
+      setStudentInfo(currentStudent);
+
+      const storedEnrolledCourses =
+        JSON.parse(localStorage.getItem("enrolledCourses")) || [];
+      const studentCourses = storedEnrolledCourses
+        .filter((enrollment) => enrollment.studentEmail === loggedInUser.email)
+        .map((enrollment) => enrollment.courseName);
+      setEnrolledCourses(studentCourses);
+    }
+  }, [loggedInUser]);
+
+  if (!studentInfo) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center p-8">
+        <p className="text-lg text-gray-700">Loading student profile...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-8">
+      <div className="bg-white rounded-lg shadow-xl p-8 max-w-xl w-full text-center border border-indigo-200">
+        <h2 className="text-4xl font-bold text-indigo-600 mb-8">
+          Student Profile
+        </h2>
+        <div className="space-y-4 text-left">
+          <p className="text-lg text-gray-800">
+            <span className="font-semibold">Email:</span> {studentInfo.email}
+          </p>
+          <p className="text-lg text-gray-800">
+            <span className="font-semibold">Grade/Level:</span>{" "}
+            {studentInfo.gradeLevel}
+          </p>
+          <div className="mt-6">
+            <h3 className="text-xl font-bold text-gray-800 mb-3">
+              Enrolled Courses:
+            </h3>
+            {enrolledCourses.length > 0 ? (
+              <ul className="list-disc list-inside space-y-2 text-gray-700">
+                {enrolledCourses.map((course, index) => (
+                  <li key={index}>{course}</li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-gray-600">Not enrolled in any courses.</p>
+            )}
+          </div>
+        </div>
+        <div className="flex justify-center mt-8">
+          <button
+            onClick={() => setCurrentPage("student-dashboard")}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition-all duration-300 transform hover:scale-105 shadow-md"
+          >
+            Back to Dashboard
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// TeacherProfilePage Component
+const TeacherProfilePage = ({ setCurrentPage, loggedInUser }) => {
+  const [teacherInfo, setTeacherInfo] = useState(null);
+  const [solvedQuestionsCount, setSolvedQuestionsCount] = useState(0);
+
+  useEffect(() => {
+    if (loggedInUser && loggedInUser.role === "teacher") {
+      const teachers =
+        JSON.parse(localStorage.getItem("doubtDeskTeachers")) || [];
+      const currentTeacher = teachers.find(
+        (t) => t.email === loggedInUser.email
+      );
+      setTeacherInfo(currentTeacher);
+
+      const allQuestions =
+        JSON.parse(localStorage.getItem("doubtDeskQuestions")) || [];
+      const solvedByThisTeacher = allQuestions.filter(
+        (q) =>
+          (q.status === "solved" || q.status === "follow-up-solved") &&
+          q.solvedByTeacher === loggedInUser.email
+      );
+      setSolvedQuestionsCount(solvedByThisTeacher.length);
+    }
+  }, [loggedInUser]);
+
+  if (!teacherInfo) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center p-8">
+        <p className="text-lg text-gray-700">Loading teacher profile...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-8">
+      <div className="bg-white rounded-lg shadow-xl p-8 max-w-xl w-full text-center border border-green-200">
+        <h2 className="text-4xl font-bold text-green-600 mb-8">
+          Teacher Profile
+        </h2>
+        <div className="space-y-4 text-left">
+          <p className="text-lg text-gray-800">
+            <span className="font-semibold">Email:</span> {teacherInfo.email}
+          </p>
+          <p className="text-lg text-gray-800">
+            <span className="font-semibold">Institute:</span>{" "}
+            {teacherInfo.institute}
+          </p>
+          <p className="text-lg text-gray-800">
+            <span className="font-semibold">Questions Solved:</span>{" "}
+            {solvedQuestionsCount}
+          </p>
+        </div>
+        <div className="flex justify-center mt-8">
+          <button
+            onClick={() => setCurrentPage("teacher-dashboard-pending")}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition-all duration-300 transform hover:scale-105 shadow-md"
+          >
+            Back to Dashboard
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// AdminProfilePage Component
+const AdminProfilePage = ({ setCurrentPage, loggedInUser }) => {
+  const [adminInfo, setAdminInfo] = useState(null);
+
+  useEffect(() => {
+    if (loggedInUser && loggedInUser.role === "admin") {
+      const admins = JSON.parse(localStorage.getItem("doubtDeskAdmins")) || [];
+      const currentAdmin = admins.find((a) => a.email === loggedInUser.email);
+
+      // Fallback to hardcoded admin if not found in local storage
+      if (!currentAdmin && loggedInUser.email === "admin@doubtdesk.com") {
+        setAdminInfo({
+          name: "DoubtDesk Admin",
+          phoneNumber: "01XXXXXXXXX",
+          email: "admin@doubtdesk.com",
+        });
+      } else {
+        setAdminInfo(currentAdmin);
+      }
+    }
+  }, [loggedInUser]);
+
+  if (!adminInfo) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center p-8">
+        <p className="text-lg text-gray-700">Loading admin profile...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-8">
+      <div className="bg-white rounded-lg shadow-xl p-8 max-w-xl w-full text-center border border-red-200">
+        <h2 className="text-4xl font-bold text-red-600 mb-8">Admin Profile</h2>
+        <div className="space-y-4 text-left">
+          <p className="text-lg text-gray-800">
+            <span className="font-semibold">Name:</span>{" "}
+            {adminInfo.name || "N/A"}
+          </p>
+          <p className="text-lg text-gray-800">
+            <span className="font-semibold">Email:</span> {adminInfo.email}
+          </p>
+          <p className="text-lg text-gray-800">
+            <span className="font-semibold">Phone Number:</span>{" "}
+            {adminInfo.phoneNumber || "N/A"}
+          </p>
+        </div>
+        <div className="flex justify-center mt-8">
+          <button
+            onClick={() => setCurrentPage("admin-dashboard")}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition-all duration-300 transform hover:scale-105 shadow-md"
+          >
+            Back to Dashboard
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // Main App Component - Manages routing and global state
 const App = () => {
   const [currentPage, setCurrentPage] = useState("home");
@@ -3367,12 +4172,58 @@ const App = () => {
   const [loggedInUser, setLoggedInUser] = useState(null); // { email: 'user@example.com', role: 'student' }
   const coursesSectionRef = useRef(null);
   const [isCoursesOnlyView, setIsCoursesOnlyView] = useState(false); // New state for hero section visibility
+  const [notifications, setNotifications] = useState([]);
+  const [highlightQuestionId, setHighlightQuestionId] = useState(null);
+  // State for managing courses, initialized from localStorage or sample data
+  const [courses, setCourses] = useState(() => {
+    const storedCourses = localStorage.getItem("doubtDeskCourses");
+    return storedCourses ? JSON.parse(storedCourses) : initialCoursesData;
+  });
+
+  // Effect to persist courses to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem("doubtDeskCourses", JSON.stringify(courses));
+  }, [courses]);
 
   // Clear local storage on initial load/refresh
+  // Removed this to allow persistence of courses, teachers, students, questions
+  // and enrollments across sessions.
+  /*
   useEffect(() => {
     localStorage.clear();
     console.log("Local storage cleared on app load.");
   }, []);
+  */
+
+  // Load notifications from local storage on login
+  useEffect(() => {
+    if (loggedInUser && loggedInUser.email) {
+      const storedNotifications =
+        JSON.parse(localStorage.getItem("doubtDeskNotifications")) || [];
+      const userNotifications = storedNotifications.filter(
+        (notif) => notif.recipientEmail === loggedInUser.email
+      );
+      setNotifications(userNotifications);
+    } else {
+      setNotifications([]); // Clear notifications if no user is logged in
+    }
+  }, [loggedInUser]);
+
+  // Save notifications to local storage whenever they change
+  useEffect(() => {
+    if (loggedInUser && loggedInUser.email) {
+      const storedNotifications =
+        JSON.parse(localStorage.getItem("doubtDeskNotifications")) || [];
+      // Remove current user's old notifications and add updated ones
+      const otherUserNotifications = storedNotifications.filter(
+        (notif) => notif.recipientEmail !== loggedInUser.email
+      );
+      localStorage.setItem(
+        "doubtDeskNotifications",
+        JSON.stringify([...otherUserNotifications, ...notifications])
+      );
+    }
+  }, [notifications, loggedInUser]);
 
   useEffect(() => {
     if (currentPage === "home-and-scroll" && coursesSectionRef.current) {
@@ -3381,56 +4232,35 @@ const App = () => {
     }
   }, [currentPage]);
 
-  const courses = [
-    {
-      topTitle: "Engineering",
-      programTitle: "Admission Program 2025",
-      courseName: "Engineering + Biology Admission Program 2025",
-      features: [
-        "All Subjects Covered",
-        "Ask Unlimited Questions",
-        "Subject-wise Expert Teachers",
-        "Chapter-specific Doubt Posting",
-        "Fast & Quality Answers",
-        "Answer Visible Only to You",
-        "24/7 Doubt Posting Facility",
-      ],
-      priceText: "2000 BDT",
-      enrollButtonText: "Enroll Now",
-    },
-    {
-      topTitle: "SSC",
-      programTitle: "Complete Preparation Batch 2025",
-      courseName: "SSC Full Course (Science Group)",
-      features: [
-        "All Subjects Covered",
-        "Ask Unlimited Questions",
-        "Subject-wise Expert Teachers",
-        "Chapter-specific Doubt Posting",
-        "Fast & Quality Answers",
-        "Answer Visible Only to You",
-        "24/7 Doubt Posting Facility",
-      ],
-      priceText: "1000 BDT",
-      enrollButtonText: "Enroll Now",
-    },
-    {
-      topTitle: "HSC",
-      programTitle: "Academic Program Prime Batch 2027",
-      courseName: "HSC 1st Year (Prime Batch)",
-      features: [
-        "All Subjects Covered",
-        "Ask Unlimited Questions",
-        "Subject-wise Expert Teachers",
-        "Chapter-specific Doubt Posting",
-        "Fast & Quality Answers",
-        "Answer Visible Only to You",
-        "24/7 Doubt Posting Facility",
-      ],
-      priceText: "1500 BDT",
-      enrollButtonText: "Enroll Now",
-    },
-  ];
+  const addNotification = (
+    recipientEmail,
+    questionId,
+    message,
+    type = "solution"
+  ) => {
+    const newNotification = {
+      id: Date.now(),
+      recipientEmail,
+      questionId,
+      message,
+      read: false,
+      timestamp: new Date().toLocaleString(),
+      type, // 'solution' or 'follow-up-teacher' or 'follow-up-student'
+    };
+    setNotifications((prev) => [...prev, newNotification]);
+  };
+
+  const markNotificationAsRead = (notificationId) => {
+    setNotifications((prev) =>
+      prev.map((notif) =>
+        notif.id === notificationId ? { ...notif, read: true } : notif
+      )
+    );
+  };
+
+  const clearNotifications = () => {
+    setNotifications([]);
+  };
 
   const handleEnrollClick = (courseName) => {
     setCourseToEnroll(courseName);
@@ -3451,11 +4281,17 @@ const App = () => {
       .map((enrollment) => enrollment.courseName);
   };
 
+  const addCourse = (newCourse) => {
+    setCourses((prevCourses) => [...prevCourses, newCourse]);
+  };
+
   const renderPage = () => {
     switch (currentPage) {
       case "home":
       case "home-and-scroll":
         const currentUserEnrolledCourses = getEnrolledCoursesForCurrentUser();
+        // Filter courses to show only active ones on the home page
+        const activeCourses = courses.filter((course) => course.isActive);
         return (
           <main className="p-8 text-center flex-grow">
             {/* Conditionally render the hero section based on isCoursesOnlyView */}
@@ -3468,17 +4304,18 @@ const App = () => {
                 <div className="flex flex-col md:flex-row mt-12 bg-white rounded-lg shadow-md max-w-6xl mx-auto overflow-hidden">
                   <div className="md:w-1/2 p-6 flex flex-col justify-center">
                     <h1 className="text-lg text-gray-700 font-bold mb-2">
-                      DoubtDesk – Your Personalized Doubt-Solving Partner
+                      DoubtDesk – Your Personal Doubt-Solving Companion
                     </h1>
                     <p className="text-gray-600 leading-relaxed mb-2">
                       Struggling with a question? DoubtDesk helps students get
-                      clear, subject-wise answers from expert teachers. Just
-                      post your doubt, and let our assigned teachers guide you –
-                      fast and focused.
+                      clear, subject-specific answers from expert teachers.
+                      Simply post your doubt, and let our dedicated educators
+                      guide you – quickly and precisely.
                     </p>
                     <p className="text-gray-600 leading-relaxed">
-                      Explore our courses, connect with teachers, and never let
-                      a doubt hold you back from achieving your academic goals.
+                      Explore our courses, connect with teachers, and don't let
+                      any doubt stand in the way of achieving your academic
+                      goals.
                     </p>
                   </div>
 
@@ -3507,7 +4344,7 @@ const App = () => {
                 Our Popular Courses
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                {courses.map((course, index) => (
+                {activeCourses.map((course, index) => (
                   <CourseCard
                     key={index}
                     topTitle={course.topTitle}
@@ -3572,7 +4409,6 @@ const App = () => {
           <StudentDashboard
             setCurrentPage={setCurrentPage}
             setSelectedCourseForSubjects={setSelectedCourseForSubjects}
-            setDoubtDetails={setDoubtDetails}
             loggedInUser={loggedInUser}
             setIsCoursesOnlyView={setIsCoursesOnlyView} // Pass the setter
           />
@@ -3582,6 +4418,9 @@ const App = () => {
           <PendingQuestionsDashboard
             setCurrentPage={setCurrentPage}
             loggedInUser={loggedInUser}
+            addNotification={addNotification} // Pass addNotification here
+            highlightQuestionId={highlightQuestionId}
+            setHighlightQuestionId={setHighlightQuestionId}
           />
         );
       case "teacher-dashboard-solved":
@@ -3592,39 +4431,68 @@ const App = () => {
           />
         );
       case "admin-dashboard":
-        return <AdminDashboard setCurrentPage={setCurrentPage} />;
+        return (
+          <AdminDashboard
+            setCurrentPage={setCurrentPage}
+            availableCourses={courses}
+          />
+        );
       case "admin-students":
         return <StudentsManagement setCurrentPage={setCurrentPage} />;
       case "admin-teachers":
         return <TeachersManagement setCurrentPage={setCurrentPage} />;
       case "admin-courses":
-        return <CoursesManagement setCurrentPage={setCurrentPage} />;
+        return (
+          <CoursesManagement
+            setCurrentPage={setCurrentPage}
+            courses={courses}
+            setCourses={setCourses}
+          />
+        );
+      case "add-course-form": // New route for adding courses
+        return (
+          <AddCourseForm
+            setCurrentPage={setCurrentPage}
+            addCourse={addCourse}
+          />
+        );
       case "admin-qa":
         return <QuestionsAnswersManagement setCurrentPage={setCurrentPage} />;
       case "admin-money-flow":
-        return <MoneyFlowManagement setCurrentPage={setCurrentPage} />;
-      case "select-doubt-details":
         return (
-          <SelectCourseAndSubject
+          <MoneyFlowManagement
             setCurrentPage={setCurrentPage}
-            setDoubtDetails={setDoubtDetails}
-            loggedInUser={loggedInUser}
+            availableCourses={courses}
           />
         );
-      case "ask-doubt":
+      case "ask-doubt-for-course": // New route for asking doubt from course details
         return (
           <AskDoubtForm
             setCurrentPage={setCurrentPage}
-            selectedCourse={doubtDetails.course}
-            selectedSubject={doubtDetails.subject}
+            preselectedCourseName={selectedCourseForSubjects} // Pre-fill course
             loggedInUser={loggedInUser}
+            addNotification={addNotification}
           />
         );
-      case "question-history":
+      case "question-history-for-course": // New route for question history from course details
         return (
           <QuestionHistoryPage
             setCurrentPage={setCurrentPage}
             loggedInUser={loggedInUser}
+            highlightQuestionId={highlightQuestionId}
+            setHighlightQuestionId={setHighlightQuestionId}
+            addNotification={addNotification}
+            filterByCourseName={selectedCourseForSubjects} // Filter by selected course
+          />
+        );
+      case "question-history": // Keep original route for general history
+        return (
+          <QuestionHistoryPage
+            setCurrentPage={setCurrentPage}
+            loggedInUser={loggedInUser}
+            highlightQuestionId={highlightQuestionId}
+            setHighlightQuestionId={setHighlightQuestionId}
+            addNotification={addNotification} // Pass addNotification
           />
         );
       case "enrollment-form":
@@ -3633,13 +4501,38 @@ const App = () => {
             courseName={courseToEnroll}
             setCurrentPage={setCurrentPage}
             loggedInUser={loggedInUser}
+            availableCourses={courses} // Pass all courses to enrollment form for price lookup
           />
         );
-      case "course-subjects":
+      case "course-details": // Updated route to the new CourseDetailsPage
         return (
-          <CourseSubjectsPage
+          <CourseDetailsPage
             courseName={selectedCourseForSubjects}
             setCurrentPage={setCurrentPage}
+            loggedInUser={loggedInUser}
+            addNotification={addNotification}
+            setHighlightQuestionId={setHighlightQuestionId}
+          />
+        );
+      case "student-profile":
+        return (
+          <StudentProfilePage
+            setCurrentPage={setCurrentPage}
+            loggedInUser={loggedInUser}
+          />
+        );
+      case "teacher-profile":
+        return (
+          <TeacherProfilePage
+            setCurrentPage={setCurrentPage}
+            loggedInUser={loggedInUser}
+          />
+        );
+      case "admin-profile":
+        return (
+          <AdminProfilePage
+            setCurrentPage={setCurrentPage}
+            loggedInUser={loggedInUser}
           />
         );
       default:
@@ -3667,6 +4560,10 @@ const App = () => {
         loggedInUser={loggedInUser}
         setLoggedInUser={setLoggedInUser}
         setIsCoursesOnlyView={setIsCoursesOnlyView} // Pass the setter
+        notifications={notifications}
+        markNotificationAsRead={markNotificationAsRead}
+        clearNotifications={clearNotifications}
+        setHighlightQuestionId={setHighlightQuestionId}
       />
       {renderPage()}
       <Footer />
@@ -3681,10 +4578,20 @@ const Navbar = ({
   loggedInUser,
   setLoggedInUser,
   setIsCoursesOnlyView, // Receive the setter
+  notifications,
+  markNotificationAsRead,
+  clearNotifications,
+  setHighlightQuestionId,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isJoinOpen, setIsJoinOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const joinRef = useRef(null);
+  const notificationsRef = useRef(null);
+
+  const unreadNotificationsCount = notifications.filter(
+    (notif) => !notif.read && notif.recipientEmail === loggedInUser?.email
+  ).length;
 
   const scrollToCourses = (e) => {
     e.preventDefault();
@@ -3703,13 +4610,26 @@ const Navbar = ({
   };
 
   const handleNotificationClick = () => {
-    console.log("Notification icon clicked!");
+    setIsNotificationsOpen(!isNotificationsOpen);
+  };
+
+  const handleNotificationItemClick = (notification) => {
+    markNotificationAsRead(notification.id);
+    setHighlightQuestionId(notification.questionId); // Set the ID to highlight
+
+    if (loggedInUser.role === "student") {
+      setCurrentPage("question-history"); // Student goes to their question history
+    } else if (loggedInUser.role === "teacher") {
+      setCurrentPage("teacher-dashboard-pending"); // Teacher goes to pending questions
+    }
+    setIsNotificationsOpen(false); // Close notification dropdown
   };
 
   const handleLogout = () => {
     setLoggedInUser(null);
     setCurrentPage("home");
     setIsCoursesOnlyView(false); // Reset to show full home on logout
+    clearNotifications(); // Clear notifications on logout
   };
 
   useEffect(() => {
@@ -3717,12 +4637,18 @@ const Navbar = ({
       if (joinRef.current && !joinRef.current.contains(event.target)) {
         setIsJoinOpen(false);
       }
+      if (
+        notificationsRef.current &&
+        !notificationsRef.current.contains(event.target)
+      ) {
+        setIsNotificationsOpen(false);
+      }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [joinRef]);
+  }, [joinRef, notificationsRef]);
 
   const isUserDashboardPage =
     loggedInUser &&
@@ -3731,14 +4657,15 @@ const Navbar = ({
       loggedInUser.role === "admin");
   const isTeacherDashboard = loggedInUser && loggedInUser.role === "teacher";
   const isAdminDashboard = loggedInUser && loggedInUser.role === "admin";
+  const isStudentDashboard = loggedInUser && loggedInUser.role === "student";
 
   const getProfilePage = () => {
     if (loggedInUser && loggedInUser.role === "student") {
-      return "student-dashboard";
+      return "student-profile";
     } else if (loggedInUser && loggedInUser.role === "teacher") {
-      return "teacher-dashboard-pending";
+      return "teacher-profile";
     } else if (loggedInUser && loggedInUser.role === "admin") {
-      return "admin-dashboard";
+      return "admin-profile";
     }
     return "home";
   };
@@ -3812,26 +4739,75 @@ const Navbar = ({
                   Admin Dashboard
                 </a>
               )}
-              <button
-                onClick={handleNotificationClick}
-                className="p-2 text-gray-700 hover:text-indigo-600 rounded-full hover:bg-gray-100 transition-colors duration-200"
-                title="Notifications"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                  />
-                </svg>
-              </button>
+              {(isStudentDashboard || isTeacherDashboard) && (
+                <div className="relative" ref={notificationsRef}>
+                  <button
+                    onClick={handleNotificationClick}
+                    className="p-2 text-gray-700 hover:text-indigo-600 rounded-full hover:bg-gray-100 transition-colors duration-200 relative"
+                    title="Notifications"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                      />
+                    </svg>
+                    {unreadNotificationsCount > 0 && (
+                      <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
+                        {unreadNotificationsCount}
+                      </span>
+                    )}
+                  </button>
+                  {isNotificationsOpen && (
+                    <div className="absolute right-0 mt-2 w-80 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
+                      <div
+                        className="py-1"
+                        role="menu"
+                        aria-orientation="vertical"
+                        aria-labelledby="options-menu"
+                      >
+                        {notifications.length === 0 ? (
+                          <p className="px-4 py-2 text-sm text-gray-500">
+                            No notifications.
+                          </p>
+                        ) : (
+                          notifications
+                            .filter(
+                              (notif) =>
+                                notif.recipientEmail === loggedInUser.email
+                            )
+                            .map((notif) => (
+                              <div
+                                key={notif.id}
+                                onClick={() =>
+                                  handleNotificationItemClick(notif)
+                                }
+                                className={`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer ${
+                                  notif.read ? "bg-gray-50" : "font-semibold"
+                                }`}
+                                role="menuitem"
+                              >
+                                <p>{notif.message}</p>
+                                <p className="text-xs text-gray-500 mt-1">
+                                  {notif.timestamp}
+                                </p>
+                              </div>
+                            ))
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
               <a
                 href="#"
                 onClick={() => setCurrentPage(getProfilePage())}
@@ -3916,38 +4892,6 @@ const Navbar = ({
                   </div>
                 )}
               </div>
-              <a
-                href="#"
-                className="text-gray-700 hover:text-indigo-600 font-medium transition-colors duration-200 py-2 px-3 rounded-md hover:bg-gray-100"
-              >
-                About Us
-              </a>
-              <a
-                href="#"
-                className="text-gray-700 hover:text-indigo-600 font-medium transition-colors duration-200 py-2 px-3 rounded-md hover:bg-gray-100"
-              >
-                Contact
-              </a>
-              <button
-                onClick={handleNotificationClick}
-                className="p-2 text-gray-700 hover:text-indigo-600 rounded-full hover:bg-gray-100 transition-colors duration-200"
-                title="Notifications"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                  />
-                </svg>
-              </button>
             </>
           )}
         </div>
@@ -4050,30 +4994,75 @@ const Navbar = ({
                     Admin Dashboard
                   </a>
                 )}
-                <button
-                  onClick={() => {
-                    handleNotificationClick();
-                    setIsOpen(false);
-                  }}
-                  className="p-2 text-gray-700 hover:text-indigo-600 rounded-full hover:bg-gray-100 transition-colors duration-200 w-full text-left"
-                  title="Notifications"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 inline-block mr-2"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                    />
-                  </svg>
-                  Notifications
-                </button>
+                {(isStudentDashboard || isTeacherDashboard) && (
+                  <div className="relative">
+                    <button
+                      onClick={handleNotificationClick}
+                      className="p-2 text-gray-700 hover:text-indigo-600 rounded-full hover:bg-gray-100 transition-colors duration-200 w-full text-left relative"
+                      title="Notifications"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6 inline-block mr-2"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                        />
+                      </svg>
+                      Notifications
+                      {unreadNotificationsCount > 0 && (
+                        <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
+                          {unreadNotificationsCount}
+                        </span>
+                      )}
+                    </button>
+                    {isNotificationsOpen && (
+                      <div className="absolute left-0 mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
+                        <div
+                          className="py-1"
+                          role="menu"
+                          aria-orientation="vertical"
+                          aria-labelledby="options-menu"
+                        >
+                          {notifications.length === 0 ? (
+                            <p className="px-4 py-2 text-sm text-gray-500">
+                              No notifications.
+                            </p>
+                          ) : (
+                            notifications
+                              .filter(
+                                (notif) =>
+                                  notif.recipientEmail === loggedInUser.email
+                              )
+                              .map((notif) => (
+                                <div
+                                  key={notif.id}
+                                  onClick={() =>
+                                    handleNotificationItemClick(notif)
+                                  }
+                                  className={`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer ${
+                                    notif.read ? "bg-gray-50" : "font-semibold"
+                                  }`}
+                                  role="menuitem"
+                                >
+                                  <p>{notif.message}</p>
+                                  <p className="text-xs text-gray-500 mt-1">
+                                    {notif.timestamp}
+                                  </p>
+                                </div>
+                              ))
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
                 <a
                   href="#"
                   onClick={() => {
@@ -4103,7 +5092,7 @@ const Navbar = ({
                 >
                   Courses
                 </a>
-                <div className="relative">
+                <div className="relative" ref={joinRef}>
                   <button
                     onClick={() => setIsJoinOpen(!isJoinOpen)}
                     className="text-gray-700 hover:text-indigo-600 block px-3 py-2 rounded-md text-base font-medium w-full text-left focus:outline-none flex items-center justify-between"
@@ -4151,42 +5140,6 @@ const Navbar = ({
                     </div>
                   )}
                 </div>
-                <a
-                  href="#"
-                  className="text-gray-700 hover:text-indigo-600 block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
-                >
-                  About Us
-                </a>
-                <a
-                  href="#"
-                  className="text-gray-700 hover:text-indigo-600 block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
-                >
-                  Contact
-                </a>
-                <button
-                  onClick={() => {
-                    handleNotificationClick();
-                    setIsOpen(false);
-                  }}
-                  className="p-2 text-gray-700 hover:text-indigo-600 rounded-full hover:bg-gray-100 transition-colors duration-200 w-full text-left"
-                  title="Notifications"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 inline-block mr-2"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                    />
-                  </svg>
-                  Notifications
-                </button>
               </>
             )}
           </div>
