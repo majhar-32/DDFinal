@@ -144,7 +144,7 @@ const QuestionsAnswersManagement = ({ setCurrentPage }) => {
         <div className="flex justify-center mt-8">
           <button
             onClick={() => setCurrentPage("admin-dashboard")}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg"
+            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg"
           >
             Back to Dashboard
           </button>

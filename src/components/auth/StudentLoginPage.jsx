@@ -37,13 +37,11 @@ const StudentLoginPage = ({
     if (foundStudent) {
       setIsSubmitted(true);
       setLoggedInUser({ email: foundStudent.email, role: "student" });
-      setTimeout(() => {
-        if (isEnrollmentFlow) {
-          setCurrentPage("enrollment-form");
-        } else {
-          setCurrentPage("student-dashboard");
-        }
-      }, 1500);
+      if (isEnrollmentFlow) {
+        setCurrentPage("enrollment-form");
+      } else {
+        setCurrentPage("student-dashboard");
+      }
     } else {
       setError(
         "Invalid email or password. Please register if you don't have an account."
@@ -56,7 +54,7 @@ const StudentLoginPage = ({
     <div className="min-h-screen bg-yellow-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full text-center border border-yellow-200">
         <h2 className="text-4xl font-bold text-gray-800 mb-8">Student Login</h2>
-        {isSubmitted && (
+        {/* {isSubmitted && (
           <div
             className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6"
             role="alert"
@@ -66,7 +64,7 @@ const StudentLoginPage = ({
               Logging in. Redirecting to dashboard...
             </span>
           </div>
-        )}
+        )} */}
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
             <input

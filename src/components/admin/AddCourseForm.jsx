@@ -55,9 +55,7 @@ const AddCourseForm = ({ setCurrentPage, addCourse }) => {
 
       addCourse(newCourse);
 
-      setTimeout(() => {
-        setCurrentPage("admin-courses");
-      }, 1500);
+      setCurrentPage("admin-courses");
     }
   };
 

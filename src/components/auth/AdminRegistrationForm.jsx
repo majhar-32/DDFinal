@@ -66,9 +66,7 @@ const AdminRegistrationForm = ({ setCurrentPage }) => {
         JSON.stringify([...existingAdmins, newAdmin])
       );
 
-      setTimeout(() => {
-        setCurrentPage("admin-login");
-      }, 1500);
+      setCurrentPage("admin-login");
     }
   };
 
@@ -78,7 +76,7 @@ const AdminRegistrationForm = ({ setCurrentPage }) => {
         <h2 className="text-4xl font-bold text-gray-800 mb-8">
           Admin Registration
         </h2>
-        {isSubmitted && (
+        {/* {isSubmitted && (
           <div
             className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6"
             role="alert"
@@ -88,7 +86,7 @@ const AdminRegistrationForm = ({ setCurrentPage }) => {
               Your registration has been submitted. Redirecting to login...
             </span>
           </div>
-        )}
+        )} */}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <input

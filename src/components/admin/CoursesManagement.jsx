@@ -78,8 +78,8 @@ const CoursesManagement = ({ setCurrentPage, courses, setCourses }) => {
                         }
                         className={`px-4 py-2 rounded-md font-medium transition-colors duration-200 shadow-md ${
                           course.isActive
-                            ? "bg-red-500 hover:bg-red-600 text-white"
-                            : "bg-green-500 hover:bg-green-600 text-white"
+                            ? "bg-blue-400 hover:bg-blue-600 text-white"
+                            : "bg-green-400 hover:bg-green-600 text-white"
                         }`}
                       >
                         {course.isActive ? "Deactivate" : "Activate"}
@@ -94,7 +94,7 @@ const CoursesManagement = ({ setCurrentPage, courses, setCourses }) => {
         <div className="flex justify-center mt-8">
           <button
             onClick={() => setCurrentPage("admin-dashboard")}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition-all duration-300 transform hover:scale-105 shadow-md"
+            className="bg-blue-400 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition-all duration-300 transform hover:scale-105 shadow-md"
           >
             Back to Dashboard
           </button>

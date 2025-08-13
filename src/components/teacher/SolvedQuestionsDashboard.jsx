@@ -62,7 +62,7 @@ const SolvedQuestionsDashboard = ({ setCurrentPage, loggedInUser }) => {
                 </div>
                 <button
                   onClick={() => handleViewSolutionClick(question)}
-                  className="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-md font-medium"
+                  className="bg-purple-400 hover:bg-blue-500 text-white px-5 py-2 rounded-md font-medium"
                 >
                   View Details
                 </button>
@@ -74,9 +74,9 @@ const SolvedQuestionsDashboard = ({ setCurrentPage, loggedInUser }) => {
 
       {/* Solution Details Modal */}
       {viewingSolution && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-green-100 bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg shadow-xl p-8 max-w-xl w-full text-left">
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">
+            <h3 className="text-2xl font-bold text-blue-400 mb-4">
               {viewingSolution.originalQuestionId
                 ? "Follow-up Details"
                 : "Question Details"}
@@ -95,7 +95,7 @@ const SolvedQuestionsDashboard = ({ setCurrentPage, loggedInUser }) => {
             <div className="text-right mt-6">
               <button
                 onClick={handleCloseSolutionView}
-                className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded"
+                className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded"
               >
                 Close
               </button>

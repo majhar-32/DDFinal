@@ -105,16 +105,14 @@ const AskDoubtForm = ({
       if (onSuccess) onSuccess();
     } else {
       setIsPosted(true);
-      setTimeout(() => {
-        setCurrentPage("student-dashboard");
-      }, 1500);
+      setCurrentPage("student-dashboard");
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-xl p-8 max-w-2xl w-full text-center border border-yellow-200">
-        <h2 className="text-4xl font-bold text-yellow-600 mb-6">
+    <div className="fixed inset-0 bg-green-100 bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-lg shadow-xl p-8 max-w-2xl w-full text-center border border-blue-200">
+        <h2 className="text-4xl font-bold text-blue-400 mb-6">
           {isFollowUp ? "Ask a Follow-up" : "Ask a Doubt"}
         </h2>
         {isPosted && (
@@ -205,7 +203,7 @@ const AskDoubtForm = ({
           <div className="flex justify-center">
             <button
               type="submit"
-              className="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg"
+              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg"
             >
               Post Question
             </button>

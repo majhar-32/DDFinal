@@ -31,7 +31,7 @@ const AdminProfilePage = ({ setCurrentPage, loggedInUser }) => {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-8">
       <div className="bg-white rounded-lg shadow-xl p-8 max-w-xl w-full text-center border border-red-200">
-        <h2 className="text-4xl font-bold text-red-600 mb-8">Admin Profile</h2>
+        <h2 className="text-4xl font-bold text-blue-500 mb-8">Admin Profile</h2>
         <div className="space-y-4 text-left">
           <p className="text-lg text-gray-800">
             <span className="font-semibold">Name:</span>{" "}
@@ -48,7 +48,7 @@ const AdminProfilePage = ({ setCurrentPage, loggedInUser }) => {
         <div className="flex justify-center mt-8">
           <button
             onClick={() => setCurrentPage("admin-dashboard")}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition-all duration-300 transform hover:scale-105 shadow-md"
+            className="bg-blue-400 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition-all duration-300 transform hover:scale-105 shadow-md"
           >
             Back to Dashboard
           </button>

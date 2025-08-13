@@ -24,10 +24,7 @@ const PendingQuestionsDashboard = ({
         behavior: "smooth",
         block: "center",
       });
-      const timer = setTimeout(() => {
-        setHighlightQuestionId(null);
-      }, 3000);
-      return () => clearTimeout(timer);
+      setHighlightQuestionId(null);
     }
   }, [highlightQuestionId, allQuestions]);
 
@@ -114,7 +111,7 @@ const PendingQuestionsDashboard = ({
                 </div>
                 <button
                   onClick={() => handleSolveClick(question)}
-                  className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-md font-medium"
+                  className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md font-medium"
                 >
                   Solve
                 </button>

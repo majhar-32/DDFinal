@@ -61,9 +61,7 @@ const StudentRegistrationForm = ({ setCurrentPage }) => {
         JSON.stringify([...existingStudents, newStudent])
       );
 
-      setTimeout(() => {
-        setCurrentPage("student-login");
-      }, 1500);
+      setCurrentPage("student-login");
     }
   };
 
@@ -73,7 +71,7 @@ const StudentRegistrationForm = ({ setCurrentPage }) => {
         <h2 className="text-4xl font-bold text-gray-800 mb-8">
           Student Registration
         </h2>
-        {isSubmitted && (
+        {/* {isSubmitted && (
           <div
             className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6"
             role="alert"
@@ -83,7 +81,7 @@ const StudentRegistrationForm = ({ setCurrentPage }) => {
               Your registration has been submitted. Redirecting to login...
             </span>
           </div>
-        )}
+        )} */}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <input

@@ -84,7 +84,7 @@ const SolutionForm = ({
           <div className="flex justify-center space-x-4">
             <button
               type="submit"
-              className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-5 rounded-lg"
+              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-5 rounded-lg"
             >
               Submit Solution
             </button>

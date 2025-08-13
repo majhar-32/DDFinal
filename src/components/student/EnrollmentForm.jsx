@@ -74,10 +74,7 @@ const EnrollmentForm = ({
         "enrolledCourses",
         JSON.stringify(updatedEnrolledCourses)
       );
-
-      setTimeout(() => {
-        setCurrentPage("student-dashboard");
-      }, 2000);
+      setCurrentPage("student-dashboard");
     }
   };
 
@@ -87,7 +84,7 @@ const EnrollmentForm = ({
         <h2 className="text-3xl font-bold text-gray-800 mb-6">
           Enroll: {courseName}
         </h2>
-        {isSubmitted && (
+        {/* {isSubmitted && (
           <div
             className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6"
             role="alert"
@@ -97,7 +94,7 @@ const EnrollmentForm = ({
               Your purchase has been confirmed. Redirecting to dashboard...
             </span>
           </div>
-        )}
+        )} */}
         {isAlreadyEnrolled && (
           <div
             className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative mb-6"

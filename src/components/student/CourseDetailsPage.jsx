@@ -19,13 +19,13 @@ const CourseDetailsPage = ({ courseName, setCurrentPage }) => {
         <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
           <button
             onClick={handleAskDoubtClick}
-            className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition-all duration-300 transform hover:scale-105 shadow-md"
+            className="bg-blue-400 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition-all duration-300 transform hover:scale-105 shadow-md"
           >
             Ask a Doubt for this Course
           </button>
           <button
             onClick={handleViewQuestionsClick}
-            className="bg-green-700 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition-all duration-300 transform hover:scale-105 shadow-md"
+            className="bg-blue-400 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition-all duration-300 transform hover:scale-105 shadow-md"
           >
             View Questions for this Course
           </button>
@@ -34,7 +34,7 @@ const CourseDetailsPage = ({ courseName, setCurrentPage }) => {
         <div className="mt-8">
           <button
             onClick={() => setCurrentPage("student-dashboard")}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition-all duration-300 transform hover:scale-105 shadow-md"
+            className="bg-blue-400 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition-all duration-300 transform hover:scale-105 shadow-md"
           >
             Back to Dashboard
           </button>
